@@ -22,7 +22,6 @@ namespace BM_RCON.BM_RCON_lib
             this.address = addr;
             this.port = port;
             this.password = password;
-            this.client = new TcpClient(addr, port);
 
             UTF8Encoding uTF8 = new UTF8Encoding();
             this.start_del_bytes = uTF8.GetBytes("┐");
@@ -35,12 +34,15 @@ namespace BM_RCON.BM_RCON_lib
             try
             {
                 Console.WriteLine("Connecting to {0}:{1} using '{2}' as password...",
-                                    address, port, password);
+                                    this.address, this.port, this.password);
 
-                NetworkStream stream = client.GetStream();
+                // no method to reconnect, let's instanciate one each time...
+                this.client = new TcpClient(this.address, this.port);
+
+                NetworkStream stream = this.client.GetStream();
                 stream.WriteTimeout = 7000;
 
-                status = SendRequest(RequestType.login, password);
+                status = SendRequest(RequestType.login, this.password);
                 if (status == 1)
                 {
                     Console.WriteLine("Failed to connect.");
@@ -61,8 +63,8 @@ namespace BM_RCON.BM_RCON_lib
 
         public void Disconnect()
         {
-            client.Close();
-            Console.WriteLine("Client {0}:{1} disconnected.", address, port);
+            this.client.Close();
+            Console.WriteLine("Client {0}:{1} disconnected.", this.address, this.port);
         }
 
         public byte[] CreatePacket(RequestType RequestType, string body)
@@ -114,7 +116,7 @@ namespace BM_RCON.BM_RCON_lib
             UTF8Encoding uTF8 = new UTF8Encoding();
 
             // skip the start delimiter
-            int byte_ptr = start_del_bytes.Length;
+            int byte_ptr = this.start_del_bytes.Length;
 
             // number of bytes for 16-bit integer
             int short_bytes = 2;
@@ -138,7 +140,7 @@ namespace BM_RCON.BM_RCON_lib
             int status = 0;
             try
             {
-                NetworkStream stream = client.GetStream();
+                NetworkStream stream = this.client.GetStream();
                 stream.WriteTimeout = 7000;
                 stream.Write(req, 0, req.Length);
 
@@ -173,11 +175,11 @@ namespace BM_RCON.BM_RCON_lib
             try
             {
                 // always get stream, and do not close it afterwards
-                NetworkStream stream = client.GetStream();
+                NetworkStream stream = this.client.GetStream();
                 stream.ReadTimeout = 7000;
 
-                byte[] packet_received = new byte[client.ReceiveBufferSize];
-                if (client.ReceiveBufferSize > 0)
+                byte[] packet_received = new byte[this.client.ReceiveBufferSize];
+                if (this.client.ReceiveBufferSize > 0)
                 {
                     // reads data from stream and put it in the buffer "packet_received"
                     stream.Read(packet_received, 0, packet_received.Length);

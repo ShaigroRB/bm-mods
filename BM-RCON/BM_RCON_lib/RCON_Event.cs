@@ -29,7 +29,7 @@ namespace BM_RCON.BM_RCON_lib
         {
             get
             {
-                return json_size;
+                return this.json_size;
             }
         }
 
@@ -37,7 +37,7 @@ namespace BM_RCON.BM_RCON_lib
         {
             get
             {
-                return eventID;
+                return this.eventID;
             }
         }
 
@@ -45,7 +45,7 @@ namespace BM_RCON.BM_RCON_lib
         {
             get
             {
-                return json_str;
+                return this.json_str;
             }
         }
 
@@ -53,7 +53,7 @@ namespace BM_RCON.BM_RCON_lib
         {
             get
             {
-                return json_obj;
+                return this.json_obj;
             }
         }
 
