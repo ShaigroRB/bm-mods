@@ -186,7 +186,7 @@ namespace BM_RCON.BM_RCON_lib
 
                     rcon_evt = ParsePacket(packet_received);
 
-                    Console.WriteLine("Event ({0}) received.", rcon_evt.EventID);
+                    //Console.WriteLine("Event ({0}) received.", rcon_evt.EventID);
                 }
             }
             catch (Exception e)
