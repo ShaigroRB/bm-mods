@@ -111,6 +111,11 @@ namespace BM_RCON.mods.betmode
             lib.EventType latest_evt_type;
             dynamic json_obj;
 
+            // current bet and next bet
+            Bet[] bets = new Bet[2];
+            int current_bet = 0;
+            int next_bet = 1;
+
             Player[] connected_players = new Player[20];
             Player[] disconnected_players = new Player[200];
 
@@ -148,29 +153,53 @@ namespace BM_RCON.mods.betmode
                             break;
 
                         case lib.EventType.player_connect:
-                            Profile profile = createProfile((string)json_obj.Profile, (string)json_obj.Store);
-                            int index = indexPlayerGivenProfile(disconnected_players, profile);
-                            int null_index = indexFirstNull(connected_players);
-                            // if player exists (already joined the ongoing game before)
-                            if (index != -1)
                             {
-                                if (null_index == -1)
+                                Profile profile_connect = createProfile((string)json_obj.Profile, (string)json_obj.Store);
+                                int index = indexPlayerGivenProfile(disconnected_players, profile_connect);
+                                int null_index = indexFirstNull(connected_players);
+                                // if player exists (already joined the ongoing game before)
+                                if (index != -1)
                                 {
-                                    Console.WriteLine("PROBLEM: more than 20 players in server should be impossible.");
-                                    ongoing_game = false;
-                                    amout_of_games = 10;
+                                    if (null_index == -1)
+                                    {
+                                        Console.WriteLine("PROBLEM: more than 20 players in server should be impossible.");
+                                        ongoing_game = false;
+                                        amout_of_games = 10;
+                                    }
+                                    else
+                                    {
+                                        disconnected_players[index].Connected();
+                                        connected_players[null_index] = disconnected_players[index];
+                                        disconnected_players[index] = null;
+                                    }
                                 }
+                                // if first time player joined the ongoing game
                                 else
                                 {
-                                    connected_players[null_index] = disconnected_players[index];
-                                    disconnected_players[index] = null;
+                                    Player player = new Player((string)json_obj.PlayerName, profile_connect);
+                                    connected_players[null_index] = player;
                                 }
                             }
-                            // if first time player joined the ongoing game
-                            else
-                            {
-                                Player player = new Player((string)json_obj.PlayerName, profile);
-                                connected_players[null_index] = player;
+                            break;
+
+                        case lib.EventType.player_disconnect:
+                            { 
+                                Profile profile_disconnect = createProfile(json_obj.Profile);
+                                int index = indexPlayerGivenProfile(connected_players, profile_disconnect);
+                                int null_index = indexFirstNull(disconnected_players);
+
+                                Player player = connected_players[index];
+
+                                player.Disconnected();
+                                player.IsAlive = false;
+
+                                if (bets[current_bet] != null)
+                                {
+                                    bets[current_bet].UpdateDeadPlayer(player);
+                                }
+
+                                disconnected_players[null_index] = connected_players[index];
+                                connected_players[index] = null;
                             }
                             break;
                     }
@@ -225,7 +254,7 @@ namespace BM_RCON.mods.betmode
 
         private Profile createProfile(dynamic profile)
         {
-            return createProfile(profile.ProfileID, profile.StoreID);
+            return createProfile((string)profile.ProfileID, (string)profile.StoreID);
         }
 
         private Profile createProfile(string profileID, string storeID)
