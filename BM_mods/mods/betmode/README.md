@@ -4,14 +4,14 @@
 - if the bet is won, every player will earn a \*number of random vices
 
 ## The events to catch
-- [ ] player_connect:
-	- [ ] Check if an instance of Player corresponding to the player exists
-	- [ ] If not, create one and add it to connected_players
-	- [ ] Otherwise, move the corresponding Player from disconnected_players to connected_players
-- [ ] player_disconnect:
-	- [ ] Set the Player as dead
-	- [ ] Update the Bet (if one) with the Player
-	- [ ] Move the Player from connected_players to disconnected_players
+- [x] player_connect:
+	- [x] Check if an instance of Player corresponding to the player exists
+	- [x] If not, create one and add it to connected_players
+	- [x] Otherwise, move the corresponding Player from disconnected_players to connected_players
+- [x] player_disconnect:
+	- [x] Set the Player as dead
+	- [x] Update the Bet (if one) with the Player
+	- [x] Move the Player from connected_players to disconnected_players
 - [ ] player_spawn:
 	- [ ] Set the Player as alive
 - [ ] player_death:
