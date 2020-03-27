@@ -8,7 +8,7 @@ using lib = BM_RCON.BM_RCON_lib;
 using RequestType = BM_RCON.BM_RCON_lib.RequestType;
 
 
-namespace BM_RCON
+namespace BM_RCON.mods
 {
     class Program
     {
