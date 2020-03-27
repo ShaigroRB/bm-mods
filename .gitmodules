@@ -1,0 +1,3 @@
+[submodule "BM_mods/rcon_lib"]
+	path = BM_mods/rcon_lib
+	url = https://github.com/ShaigroRB/bm-rcon
