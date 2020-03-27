@@ -2,14 +2,14 @@
 Repo where you can find different mods developed for Boring Man v2 using [bm-rcon](https://github.com/ShaigroRB/bm-rcon)
 
 ## Requirements
-This project uses .NET Core 2.0. and Json.NET as dependencies.
+This project uses .NET Core 2.0. and Json.NET as dependencies.  
 It also uses bm-rcon as git submodule.
 
 ## Boring Man RCON
 RCON stands for Remote CONsole. It is used to send and receive data from Boring Man servers.  
 The documentation about Boring Man RCON is **[here](https://github.com/Spasman/rcon_example)**.  
-You can find the different commands to send to the server **[here](https://github.com/coyote963/bm-boilerplate#additional-server-commands-you-can-send-these-packets-via-rcon-besides-the-request-data-ones)**.
-Check [bm-rcon](https://github.com/ShaigroRB/bm-rcon) to find how to use it.
+You can find the different commands to send to the server **[here](https://github.com/coyote963/bm-boilerplate#additional-server-commands-you-can-send-these-packets-via-rcon-besides-the-request-data-ones)**.  
+Check **[bm-rcon](https://github.com/ShaigroRB/bm-rcon)** to find how to use it.
 
 ## To get started
 *todo*
@@ -22,7 +22,7 @@ If you want to add your own mod in the repo, you are free to make pull requests.
 - [ ] Releases after a mod is added / modified
 
 ## Licenses
-This project is under the MIT license. 
-bm-rcon is under the MIT license.
+This project is under the MIT license.  
+bm-rcon is under the MIT license.  
 .NET Core 2.0 is under the MIT license.  
 Json.NET is under the MIT license.
