@@ -179,6 +179,9 @@ namespace BM_RCON.mods.betmode
                                     Player player = new Player((string)json_obj.PlayerName, profile_connect);
                                     connected_players[null_index] = player;
                                 }
+
+                                //display all connected players
+                                printPlayers(connected_players, true);
                             }
                             break;
 
@@ -200,6 +203,9 @@ namespace BM_RCON.mods.betmode
 
                                 disconnected_players[null_index] = connected_players[index];
                                 connected_players[index] = null;
+
+                                // display all disconnected players
+                                printPlayers(disconnected_players, false);
                             }
                             break;
                     }
@@ -260,6 +266,21 @@ namespace BM_RCON.mods.betmode
         private Profile createProfile(string profileID, string storeID)
         {
             return new Profile(profileID, storeID);
+        }
+
+        private void printPlayers(Player[] players, bool are_connected)
+        {
+            string connected = are_connected ? "CONNECTED" : "DISCONNECTED";
+            Console.WriteLine("The {0} players are:", connected);
+
+            foreach (var player in players)
+            {
+                if (player == null)
+                {
+                    return;
+                }
+                Console.Write("{0}, ", player.Name);
+            }
         }
     }
 }
