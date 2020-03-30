@@ -8,11 +8,18 @@ namespace BM_RCON.mods.betmode
     {
         string profileID;
         string storeID;
+        string profile;
 
         public Profile(string profileID, string storeID)
         {
             this.profileID = profileID;
             this.storeID = storeID;
+            this.profile = $"{{ \"ProfileID\": \"{profileID}\", \"StoreID:\" \"{storeID}\" }}";
+        }
+
+        public Profile(string profile)
+        {
+            this.profile = profile;
         }
 
         public string ProfileID
@@ -31,9 +38,17 @@ namespace BM_RCON.mods.betmode
             }
         }
 
+        public string FullProfile
+        {
+            get
+            {
+                return this.profile;
+            }
+        }
+
         public bool Equals(Profile profile)
         {
-            return (this.profileID.Equals(profile.ProfileID)) && (this.storeID.Equals(profile.StoreID));
+            return this.FullProfile.Equals(profile.FullProfile);
         }
     }
 }
