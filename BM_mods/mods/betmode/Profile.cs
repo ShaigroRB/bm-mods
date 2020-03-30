@@ -14,7 +14,7 @@ namespace BM_RCON.mods.betmode
         {
             this.profileID = profileID;
             this.storeID = storeID;
-            this.profile = $"{{ \"ProfileID\": \"{profileID}\", \"StoreID:\" \"{storeID}\" }}";
+            this.profile = $"{{ \"ProfileID\": \"{profileID}\", \"StoreID\": \"{storeID}\" }}";
         }
 
         public Profile(string profile)
