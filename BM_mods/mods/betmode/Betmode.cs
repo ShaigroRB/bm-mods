@@ -16,13 +16,13 @@ namespace BM_RCON.mods.betmode
         {
             Thread.Sleep(160);
             rcon.SendRequest(requestType, body);
-            Console.WriteLine("");
+            //Console.WriteLine("");
         }
 
         private lib.RCON_Event receiveEvt(lib.BM_RCON rcon)
         {
             lib.RCON_Event evt = rcon.ReceiveEvent();
-            Console.WriteLine("");
+            //Console.WriteLine("");
             return evt;
         }
         static int Main(string[] args)
@@ -179,12 +179,15 @@ namespace BM_RCON.mods.betmode
                                     Player player = new Player((string)json_obj.PlayerName, profile_connect);
                                     connected_players[null_index] = player;
                                 }
+
+                                //display all connected players
+                                printPlayers(connected_players, true);
                             }
                             break;
 
                         case lib.EventType.player_disconnect:
-                            { 
-                                Profile profile_disconnect = createProfile(json_obj.Profile);
+                            {
+                                Profile profile_disconnect = createProfile(json_obj.Profile.ToString());
                                 int index = indexPlayerGivenProfile(connected_players, profile_disconnect);
                                 int null_index = indexFirstNull(disconnected_players);
 
@@ -200,6 +203,9 @@ namespace BM_RCON.mods.betmode
 
                                 disconnected_players[null_index] = connected_players[index];
                                 connected_players[index] = null;
+
+                                // display all disconnected players
+                                printPlayers(disconnected_players, false);
                             }
                             break;
                     }
@@ -252,14 +258,30 @@ namespace BM_RCON.mods.betmode
             return index;
         }
 
-        private Profile createProfile(dynamic profile)
+        private Profile createProfile(string full_profile)
         {
-            return createProfile((string)profile.ProfileID, (string)profile.StoreID);
+            return new Profile(full_profile);
         }
 
         private Profile createProfile(string profileID, string storeID)
         {
             return new Profile(profileID, storeID);
+        }
+
+        private void printPlayers(Player[] players, bool are_connected)
+        {
+            string connected = are_connected ? "CONNECTED" : "DISCONNECTED";
+            Console.WriteLine("The {0} players are:", connected);
+
+            foreach (var player in players)
+            {
+                if (player == null)
+                {
+                    Console.WriteLine("");
+                    return;
+                }
+                Console.Write("{0}, ", player.Name);
+            }
         }
     }
 }

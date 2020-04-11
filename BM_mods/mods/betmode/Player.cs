@@ -81,6 +81,14 @@ namespace BM_RCON.mods.betmode
             }
         }
 
+        public string Name
+        {
+            get
+            {
+                return this.name;
+            }
+        }
+
         public void ViceUsed(ViceID vice)
         {
             this.vices[(short)vice] -= 1;
