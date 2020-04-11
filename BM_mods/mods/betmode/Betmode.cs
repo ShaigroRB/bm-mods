@@ -216,11 +216,21 @@ namespace BM_RCON.mods.betmode
                                 Player player = connected_players[index];
 
                                 player.IsAlive = true;
-                                logger.LogInfo($"{player.Name} spawned.");
+                                logger.LogInfo($"{player.Name} spawned. ({player.IsAlive})");
+                            }
+                            break;
+
+                        case lib.EventType.player_death:
+                            {
+                                Profile player_profile = createProfile(json_obj.VictimProfile.ToString());
+                                int index = indexPlayerGivenProfile(connected_players, player_profile);
+                                Player player = connected_players[index];
+
+                                player.IsAlive = false;
+                                logger.LogInfo($"{player.Name} just died. ({player.IsAlive})");
                             }
                             break;
                     }
-
                 }
                 amout_of_games++;
             }
