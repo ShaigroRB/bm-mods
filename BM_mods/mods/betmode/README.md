@@ -12,11 +12,11 @@
 	- [x] Set the Player as dead
 	- [x] Update the Bet (if one) with the Player
 	- [x] Move the Player from connected_players to disconnected_players
-- [ ] player_spawn:
-	- [ ] Set the Player as alive
-- [ ] player_death:
-	- [ ] Set the Player as dead
-	- [ ] Update the Bet (if one) with the Player
+- [x] player_spawn:
+	- [x] Set the Player as alive
+- [x] player_death:
+	- [x] Set the Player as dead
+	- [x] Update the Bet (if one) with the Player
 - [ ] survival_get_vice:
 	- [ ] Get profile and new vice
 	- [ ] Search for the Player with the corresponding profile
