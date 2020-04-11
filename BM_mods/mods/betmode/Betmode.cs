@@ -208,6 +208,17 @@ namespace BM_RCON.mods.betmode
                                 printPlayers(disconnected_players, false, logger);
                             }
                             break;
+
+                        case lib.EventType.player_spawn:
+                            {
+                                Profile player_profile = createProfile(json_obj.Profile.ToString());
+                                int index = indexPlayerGivenProfile(connected_players, player_profile);
+                                Player player = connected_players[index];
+
+                                player.IsAlive = true;
+                                logger.LogInfo($"{player.Name} spawned.");
+                            }
+                            break;
                     }
 
                 }
