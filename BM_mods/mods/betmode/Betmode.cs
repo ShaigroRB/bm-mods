@@ -228,6 +228,11 @@ namespace BM_RCON.mods.betmode
 
                                 player.IsAlive = false;
                                 logger.LogInfo($"{player.Name} just died. ({player.IsAlive})");
+
+                                if (bets[current_bet] != null)
+                                {
+                                    bets[current_bet].UpdateDeadPlayer(player);
+                                }
                             }
                             break;
                     }
