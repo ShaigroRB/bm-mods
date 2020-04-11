@@ -17,22 +17,23 @@ namespace BM_RCON.mods
         const string addr = "127.0.0.1";
         const string passwd = "admin";
 
-        private static void sendRequest(lib.BM_RCON rcon, RequestType requestType, string body)
+        private static void sendRequest(lib.BM_RCON rcon, RequestType requestType, string body, lib.ILogger logger)
         {
             Thread.Sleep(160);
             rcon.SendRequest(requestType, body);
-            Console.WriteLine("");
+            logger.Log("");
         }
 
-        private static lib.RCON_Event receiveEvt(lib.BM_RCON rcon)
+        private static lib.RCON_Event receiveEvt(lib.BM_RCON rcon, lib.ILogger logger)
         {
             lib.RCON_Event evt = rcon.ReceiveEvent();
-            Console.WriteLine("");
+            logger.Log("");
             return evt;
         }
 
         static int Main(string[] args)
         {
+            lib.ILogger logger = new lib.ConsoleLogger();
             try
             {
                 /*
@@ -45,10 +46,10 @@ namespace BM_RCON.mods
                 string body = passwd;
                 string bigtext_cmd = "!bigtext";
                 // init rcon object with address, port and password
-                lib.BM_RCON rcon_obj = new lib.BM_RCON(addr, port, body);
+                lib.BM_RCON rcon_obj = new lib.BM_RCON(addr, port, body, logger);
                 // connect the rcon client to addr:port with body
                 rcon_obj.Connect();
-                Console.WriteLine("");
+                logger.Log("");
 
                 // enable mutators on server if not enabled
                 // sendRequest(rcon_obj, RequestType.command, "enablemutators");
@@ -58,7 +59,7 @@ namespace BM_RCON.mods
                 {
                     // receive the latest event
                     evt = rcon_obj.ReceiveEvent();
-                    Console.WriteLine("");
+                    logger.Log("");
 
                     // check if somebody type something in the chat
                     if (evt.EventID == (short)lib.EventType.chat_message)
@@ -73,7 +74,7 @@ namespace BM_RCON.mods
                             // get the text to display
                             string bigtext = msg.Substring(index + bigtext_cmd.Length);
                             // send a request which is the command "eventtext" with its parameters
-                            sendRequest(rcon_obj, RequestType.command, $"eventtext \"{bigtext}\" \"255\"");
+                            sendRequest(rcon_obj, RequestType.command, $"eventtext \"{bigtext}\" \"255\"", logger);
                         }
                     }
 
@@ -81,7 +82,7 @@ namespace BM_RCON.mods
                     // ping it back to keep the connection alive
                     if (evt.EventID == (short)lib.EventType.rcon_ping)
                     {
-                        sendRequest(rcon_obj, RequestType.ping, "I pinged");
+                        sendRequest(rcon_obj, RequestType.ping, "I pinged", logger);
                     }
                     // if a player taunts, stop the loop
                     if (evt.EventID == (short)lib.EventType.player_taunt)
@@ -101,8 +102,8 @@ namespace BM_RCON.mods
             // if something goes wrong, you will end up here
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
-                Console.WriteLine("Something went wrong in the main.");
+                logger.LogError(e.ToString());
+                logger.LogError("Something went wrong in the main.");
             }
 
             // press 'Enter' to exit the console

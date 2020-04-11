@@ -16,13 +16,11 @@ namespace BM_RCON.mods.betmode
         {
             Thread.Sleep(160);
             rcon.SendRequest(requestType, body);
-            //Console.WriteLine("");
         }
 
         private lib.RCON_Event receiveEvt(lib.BM_RCON rcon)
         {
             lib.RCON_Event evt = rcon.ReceiveEvent();
-            //Console.WriteLine("");
             return evt;
         }
         static int Main(string[] args)
@@ -85,15 +83,17 @@ namespace BM_RCON.mods.betmode
               *             - If not valid, set is_bet_flag_unlocked to false and set next Bet to null
               *     - If no, create new next Bet with <number> 
              */
+            lib.ILogger logger = new lib.ConsoleLogger();
+            logger.DisableDebug();
             try
             {
                 Betmode betmode = new Betmode();
-                betmode.Start();
+                betmode.Start(logger);
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
-                Console.WriteLine("Something went wrong in the main.");
+                logger.LogError(e.ToString());
+                logger.LogError("Something went wrong in the main.");
             }
 
             // press 'Enter' to exit the console
@@ -102,10 +102,10 @@ namespace BM_RCON.mods.betmode
             return 0;
         }
 
-        public void Start()
+        public void Start(lib.ILogger logger)
         {
             // init variables
-            lib.BM_RCON rcon = new lib.BM_RCON(addr, port, passwd);
+            lib.BM_RCON rcon = new lib.BM_RCON(addr, port, passwd, logger);
             lib.RCON_Event latest_evt;
             bool ongoing_game;
             lib.EventType latest_evt_type;
@@ -140,7 +140,7 @@ namespace BM_RCON.mods.betmode
                     switch (latest_evt_type)
                     {
                         case lib.EventType.match_end:
-                            Console.WriteLine("End of the game");
+                            logger.LogInfo("End of the game");
                             ongoing_game = false;
                             break;
 
@@ -162,7 +162,7 @@ namespace BM_RCON.mods.betmode
                                 {
                                     if (null_index == -1)
                                     {
-                                        Console.WriteLine("PROBLEM: more than 20 players in server should be impossible.");
+                                        logger.LogError("PROBLEM: more than 20 players in server should be impossible.");
                                         ongoing_game = false;
                                         amout_of_games = 10;
                                     }
@@ -181,7 +181,7 @@ namespace BM_RCON.mods.betmode
                                 }
 
                                 //display all connected players
-                                printPlayers(connected_players, true);
+                                printPlayers(connected_players, true, logger);
                             }
                             break;
 
@@ -205,7 +205,7 @@ namespace BM_RCON.mods.betmode
                                 connected_players[index] = null;
 
                                 // display all disconnected players
-                                printPlayers(disconnected_players, false);
+                                printPlayers(disconnected_players, false, logger);
                             }
                             break;
                     }
@@ -268,19 +268,19 @@ namespace BM_RCON.mods.betmode
             return new Profile(profileID, storeID);
         }
 
-        private void printPlayers(Player[] players, bool are_connected)
+        private void printPlayers(Player[] players, bool are_connected, lib.ILogger logger)
         {
             string connected = are_connected ? "CONNECTED" : "DISCONNECTED";
-            Console.WriteLine("The {0} players are:", connected);
+            logger.LogInfo($"The {connected} players are:");
 
             foreach (var player in players)
             {
                 if (player == null)
                 {
-                    Console.WriteLine("");
+                    logger.Log("");
                     return;
                 }
-                Console.Write("{0}, ", player.Name);
+                logger.LogInfo($"{player.Name}, ");
             }
         }
     }
