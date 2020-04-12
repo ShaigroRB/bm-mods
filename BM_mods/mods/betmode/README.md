@@ -13,14 +13,16 @@
 	- [x] Update the Bet (if one) with the Player
 	- [x] Move the Player from connected_players to disconnected_players
 - [x] player_spawn:
+	- [ ] Verify if it is a bot or a player
 	- [x] Set the Player as alive
 - [x] player_death:
+	- [ ] Verify if it is a bot or a player
 	- [x] Set the Player as dead
 	- [x] Update the Bet (if one) with the Player
-- [ ] survival_get_vice:
-	- [ ] Get profile and new vice
-	- [ ] Search for the Player with the corresponding profile
-	- [ ] Update its vices with the new vice
+- [x] survival_get_vice:
+	- [x] Get profile and new vice
+	- [x] Search for the Player with the corresponding profile
+	- [x] Update its vices with the new vice
 - [ ] survival_use_vice:
 	- [ ] Get profile and vice used
     - [ ] Search for the Player with the corresponding profile
