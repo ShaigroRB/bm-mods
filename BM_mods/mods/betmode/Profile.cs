@@ -50,5 +50,10 @@ namespace BM_RCON.mods.betmode
         {
             return this.FullProfile.Equals(profile.FullProfile);
         }
+
+        public bool EqualsBotProfile()
+        {
+            return this.FullProfile.Equals("{ \"ProfileID\": \"\", \"StoreID\": \"-1\" }");
+        }
     }
 }
