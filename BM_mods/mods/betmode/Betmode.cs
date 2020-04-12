@@ -235,6 +235,18 @@ namespace BM_RCON.mods.betmode
                                 }
                             }
                             break;
+
+                        case lib.EventType.survival_get_vice:
+                            {
+                                Profile profile = createProfile(json_obj.Profile.ToString());
+                                lib.ViceID viceID = (lib.ViceID)json_obj.ViceID;
+                                int index = indexPlayerGivenProfile(connected_players, profile);
+                                Player player = connected_players[index];
+
+                                player.VicesAdded(viceID, 1);
+                                logger.LogInfo($"{player.Name} got a {viceID.ToString()}");
+                            }
+                            break;
                     }
                 }
                 amout_of_games++;
