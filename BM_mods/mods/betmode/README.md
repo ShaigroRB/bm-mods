@@ -46,13 +46,18 @@
     	- [ ] Send request to spawn the enemy
 - [ ] chat_message:
 	- [ ] Check if next Bet exists
-    - [ ] If yes, check if !vote < yes/no > has been written:
-    	- [ ] Get profile from Player
-        - [ ] For the Player in connected_players with the same profile, set its Vote
-        - [ ] Check if Players in connected_players all have a Vote to either YES or NO
-        - [ ] If yes, check if next Bet is valid:
-        	- [ ] Set Vote of all connected_players to NOTHING
-			- [ ] Set Players in Bet with connected_players
-            - [ ] If valid, set is_bet_flag_unlocked to true
-            - [ ] If not valid, set is_bet_flag_unlocked to false and set next Bet to null
-	- [ ] If no, create new next Bet with < number >
+	- [ ] Check what is written
+		- [ ] If !bet < number >
+			- If next Bet does not exists, create it
+			- Else, send a message indicating the next Bet and its voting state
+		- [ ] If !vote < y/n/yes/no >
+			- If next bet does not exists, send a message indicating no Bet has been made
+			- Else
+				- [ ] Get profile from Player
+				- [ ] For the Player in connected_players with the same profile, set its Vote
+				- [ ] Check if Players in connected_players all have a Vote to either YES or NO
+				- [ ] If yes, check if next Bet is valid:
+        			- [ ] Set Vote of all connected_players to NOTHING
+					- [ ] Set Players in Bet with connected_players
+					- [ ] If valid, set is_bet_flag_unlocked to true
+					- [ ] If not valid, set is_bet_flag_unlocked to false and set next Bet to null
