@@ -319,6 +319,13 @@ namespace BM_RCON.mods.betmode
                         case lib.EventType.chat_message:
                             {
                                 logger.Log("[FIXME] chat_message");
+                                
+                                // chat message sent by the server
+                                if (json_obj.PlayerID == -1)
+                                {
+                                    break;
+                                }
+
                             }
                             break;
                     }
