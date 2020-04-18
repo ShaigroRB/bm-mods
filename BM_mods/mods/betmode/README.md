@@ -48,11 +48,11 @@
 	- [ ] Check if next Bet exists
 	- [ ] Check what is written
 		- [ ] If !bet < number >
-			- If next Bet does not exists, create it
-			- Else, send a message indicating the next Bet and its voting state
+			- [ ] If next Bet does not exists, create it
+			- [ ] Else, send a message indicating the next Bet and its voting state
 		- [ ] If !vote < y/n/yes/no >
-			- If next bet does not exists, send a message indicating no Bet has been made
-			- Else
+			- [ ] If next bet does not exists, send a message indicating no Bet has been made
+			- [ ] Else
 				- [ ] Get profile from Player
 				- [ ] For the Player in connected_players with the same profile, set its Vote
 				- [ ] Check if Players in connected_players all have a Vote to either YES or NO
