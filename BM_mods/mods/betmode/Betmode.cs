@@ -303,6 +303,24 @@ namespace BM_RCON.mods.betmode
                                 logger.LogInfo($"{player.Name} used a {viceID.ToString()}");
                             }
                             break;
+
+                        case lib.EventType.survival_new_wave:
+                            {
+                                logger.Log("[FIXME] survival_new_wave");
+                            }
+                            break;
+
+                        case lib.EventType.survival_flag_unlocked:
+                            {
+                                logger.Log("[FIXME] survival_flag_unlocked");
+                            }
+                            break;
+
+                        case lib.EventType.chat_message:
+                            {
+                                logger.Log("[FIXME] chat_message");
+                            }
+                            break;
                     }
                 }
                 amout_of_games++;
