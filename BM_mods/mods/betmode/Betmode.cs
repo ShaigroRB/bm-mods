@@ -326,6 +326,10 @@ namespace BM_RCON.mods.betmode
                                     break;
                                 }
 
+                                if (!betExists(bets[next_bet]))
+                                {
+
+                                }
                             }
                             break;
                     }
@@ -401,6 +405,11 @@ namespace BM_RCON.mods.betmode
                 }
                 logger.LogInfo($"{player.Name}, ");
             }
+        }
+
+        private bool betExists(Bet bet)
+        {
+            return bet == null;
         }
     }
 }
