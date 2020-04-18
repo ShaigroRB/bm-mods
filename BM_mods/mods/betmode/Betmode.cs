@@ -269,6 +269,18 @@ namespace BM_RCON.mods.betmode
                                 logger.LogInfo($"{player.Name} got a {viceID.ToString()}");
                             }
                             break;
+
+                        case lib.EventType.survival_use_vice:
+                            {
+                                Profile profile = createProfile(json_obj.Profile.ToString());
+                                lib.ViceID viceID = (lib.ViceID)json_obj.ViceID;
+                                int index = indexPlayerGivenProfile(connected_players, profile);
+                                Player player = connected_players[index];
+
+                                player.ViceUsed(viceID);
+                                logger.LogInfo($"{player.Name} used a {viceID.ToString()}");
+                            }
+                            break;
                     }
                 }
                 amout_of_games++;
