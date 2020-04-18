@@ -261,12 +261,46 @@ namespace BM_RCON.mods.betmode
                         case lib.EventType.survival_get_vice:
                             {
                                 Profile profile = createProfile(json_obj.Profile.ToString());
-                                lib.ViceID viceID = (lib.ViceID)json_obj.ViceID;
+                                if (profile.EqualsBotProfile())
+                                {
+                                    break;
+                                }
                                 int index = indexPlayerGivenProfile(connected_players, profile);
+                                if (index == -1)
+                                {
+                                    /* FIXME */
+                                    // create Player & Profile from a player already in the server
+                                    // when rcon client connected
+                                    break;
+                                }
+                                lib.ViceID viceID = (lib.ViceID)json_obj.ViceID;
                                 Player player = connected_players[index];
 
                                 player.VicesAdded(viceID, 1);
                                 logger.LogInfo($"{player.Name} got a {viceID.ToString()}");
+                            }
+                            break;
+
+                        case lib.EventType.survival_use_vice:
+                            {
+                                Profile profile = createProfile(json_obj.Profile.ToString());
+                                if (profile.EqualsBotProfile())
+                                {
+                                    break;
+                                }
+                                int index = indexPlayerGivenProfile(connected_players, profile);
+                                if (index == -1)
+                                {
+                                    /* FIXME */
+                                    // create Player & Profile from a player already in the server
+                                    // when rcon client connected
+                                    break;
+                                }
+                                lib.ViceID viceID = (lib.ViceID)json_obj.ViceID;
+                                Player player = connected_players[index];
+
+                                player.ViceUsed(viceID);
+                                logger.LogInfo($"{player.Name} used a {viceID.ToString()}");
                             }
                             break;
                     }
