@@ -326,10 +326,7 @@ namespace BM_RCON.mods.betmode
                                     break;
                                 }
 
-                                if (!betExists(bets[next_bet]))
-                                {
-
-                                }
+                                bool nextBetExists = !(bets[next_bet] == null);
                             }
                             break;
                     }
@@ -405,11 +402,6 @@ namespace BM_RCON.mods.betmode
                 }
                 logger.LogInfo($"{player.Name}, ");
             }
-        }
-
-        private bool betExists(Bet bet)
-        {
-            return bet == null;
         }
     }
 }
