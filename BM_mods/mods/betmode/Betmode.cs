@@ -211,8 +211,19 @@ namespace BM_RCON.mods.betmode
 
                         case lib.EventType.player_spawn:
                             {
-                                Profile player_profile = createProfile(json_obj.Profile.ToString());
-                                int index = indexPlayerGivenProfile(connected_players, player_profile);
+                                Profile profile = createProfile(json_obj.Profile.ToString());
+                                if (profile.EqualsBotProfile())
+                                {
+                                    break;
+                                }
+                                int index = indexPlayerGivenProfile(connected_players, profile);
+                                if (index == -1)
+                                {
+                                    /* FIXME */
+                                    // create Player & Profile from a player already in the server
+                                    // when rcon client connected
+                                    break;
+                                }
                                 Player player = connected_players[index];
 
                                 player.IsAlive = true;
@@ -222,8 +233,19 @@ namespace BM_RCON.mods.betmode
 
                         case lib.EventType.player_death:
                             {
-                                Profile player_profile = createProfile(json_obj.VictimProfile.ToString());
-                                int index = indexPlayerGivenProfile(connected_players, player_profile);
+                                Profile profile = createProfile(json_obj.VictimProfile.ToString());
+                                if (profile.EqualsBotProfile())
+                                {
+                                    break;
+                                }
+                                int index = indexPlayerGivenProfile(connected_players, profile);
+                                if (index == -1)
+                                {
+                                    /* FIXME */
+                                    // create Player & Profile from a player already in the server
+                                    // when rcon client connected
+                                    break;
+                                }
                                 Player player = connected_players[index];
 
                                 player.IsAlive = false;
