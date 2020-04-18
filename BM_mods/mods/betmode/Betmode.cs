@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using lib = BM_RCON.BM_RCON_lib;
@@ -327,6 +328,10 @@ namespace BM_RCON.mods.betmode
                                 }
 
                                 bool nextBetExists = !(bets[next_bet] == null);
+                                string msg = json_obj.Message;
+
+                                int indexBetMsg = msg.IndexOf("!bet");
+                                
                             }
                             break;
                     }
@@ -402,6 +407,11 @@ namespace BM_RCON.mods.betmode
                 }
                 logger.LogInfo($"{player.Name}, ");
             }
+        }
+
+        private bool isStringANumber(string msg)
+        {
+            return msg.All(char.IsDigit);
         }
     }
 }
