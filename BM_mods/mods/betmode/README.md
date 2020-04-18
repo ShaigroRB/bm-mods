@@ -23,10 +23,10 @@
 	- [x] Get profile and new vice
 	- [x] Search for the Player with the corresponding profile
 	- [x] Update its vices with the new vice
-- [ ] survival_use_vice:
-	- [ ] Get profile and vice used
-    - [ ] Search for the Player with the corresponding profile
-    - [ ] Update its vices with vice used
+- [x] survival_use_vice:
+	- [x] Get profile and vice used
+    - [x] Search for the Player with the corresponding profile
+    - [x] Update its vices with vice used
 - [ ] survival_new_wave:
 	- [ ] Stop checking for vote in chat for next Bet
     - [ ] Set Vote of all connected_players to NOTHING
