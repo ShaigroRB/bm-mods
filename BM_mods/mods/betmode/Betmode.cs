@@ -479,7 +479,7 @@ namespace BM_RCON.mods.betmode
 
         private bool isStringANumber(string msg)
         {
-            return msg.All(char.IsDigit);
+            return msg != "" && msg.All(char.IsDigit);
         }
 
         private void sendPrivateMsg(lib.BM_RCON rcon, Player player, string msg, Color color)
