@@ -162,16 +162,24 @@ namespace BM_RCON.mods.betmode
 
         private bool? isBetValidated()
         {
-            bool? votingStateForBet = null;
+            bool? isBetAccepted = null;
             // votes: index based on enum VoteState
             int[] votes = new int[5];
 
             foreach (Player player in players_voting)
             {
-                if (player != null )
+                if (player != null)
+                {
+                    votes[(int)player.Vote]++;
+                }
             }
 
-            return votingStateForBet;
+            if (votes[(int)VoteState.NOTHING] == 0)
+            {
+                isBetAccepted = votes[(int)VoteState.YES] > votes[(int)VoteState.NO];
+            }
+
+            return isBetAccepted;
         }
     }
 }
