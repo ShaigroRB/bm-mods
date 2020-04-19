@@ -116,13 +116,14 @@ namespace BM_RCON.mods.betmode
 
         public void UpdateDeadPlayer(Player player)
         {
-            int nb_players = this.nb_players;
+            int nb_players = this.players_in_bet.Length;
             bool is_player_found = false;
             for (int i = 0; !is_player_found && i < nb_players; i++)
             {
-                if (this.players_in_bet[i].SameProfileAs(player))
+                Player currentPlayer = this.players_in_bet[i];
+                if (currentPlayer != null && currentPlayer.SameProfileAs(player))
                 {
-                    this.players_in_bet[i].IsAlive = false;
+                    currentPlayer.IsAlive = false;
                     is_player_found = true;
                 }
             }
