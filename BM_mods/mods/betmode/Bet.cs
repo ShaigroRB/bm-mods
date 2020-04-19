@@ -17,6 +17,8 @@ namespace BM_RCON.mods.betmode
         int[] vices;
         // players in bet are the connected players when the flag unlocks for the next wave
         Player[] players_in_bet;
+        // players voting for the bet are the connected players before the bet is validated
+        Player[] players_voting;
         int nb_players;
 
         public Bet(int bet)
@@ -31,6 +33,9 @@ namespace BM_RCON.mods.betmode
             this.vices = new int[total_nb_vices];
             // maximum of players in a server is 20 people
             this.players_in_bet = new Player[20];
+            this.players_voting = new Player[20];
+
+            // update players voting
 
             randomizeBosses();
             randomizeVices();
@@ -91,12 +96,13 @@ namespace BM_RCON.mods.betmode
         public bool IsBetWon()
         {
             bool is_bet_won = false;
-            int nb_players = this.nb_players;
+            int nb_players = this.players_in_bet.Length;
             int nb_players_alive = 0;
 
             for (int i = 0; !is_bet_won && i < nb_players; i++)
             {
-                if (this.players_in_bet[i].IsAlive)
+                Player currentPlayer = this.players_in_bet[i];
+                if (currentPlayer != null && currentPlayer.IsAlive)
                 {
                     nb_players_alive++;
                     if (nb_players_alive >= this.bet)
@@ -137,6 +143,5 @@ namespace BM_RCON.mods.betmode
                 return this.vices;
             }
         }
-
     }
 }
