@@ -13,6 +13,27 @@ namespace BM_RCON.mods.betmode
         const string addr = "127.0.0.1";
         const string passwd = "admin";
 
+
+
+        string[] colors = {
+            "#ff0000",
+            "#00ff00",
+            "#0000ff",
+            "#008080",
+            "#800080",
+            "#fff000"
+        };
+
+        enum Color
+        {
+            red = 0,
+            green,
+            blue,
+            teal,
+            purple,
+            yellow
+        }
+
         private void sendRequest(lib.BM_RCON rcon, lib.RequestType requestType, string body)
         {
             Thread.Sleep(160);
@@ -427,6 +448,11 @@ namespace BM_RCON.mods.betmode
         private bool isStringANumber(string msg)
         {
             return msg.All(char.IsDigit);
+        }
+
+        private void sendPrivateMsg(lib.BM_RCON rcon, Player player, string msg, Color color)
+        {
+            sendRequest(rcon, lib.RequestType.command, $"pm \"{player.Name}\" \"{msg}\" \"{colors[(int)color]}\"");
         }
     }
 }
