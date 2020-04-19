@@ -21,7 +21,8 @@ namespace BM_RCON.mods.betmode
             "#0000ff",
             "#008080",
             "#800080",
-            "#fff000"
+            "#fff000",
+            "#ffa500"
         };
 
         enum Color
@@ -31,7 +32,8 @@ namespace BM_RCON.mods.betmode
             blue,
             teal,
             purple,
-            yellow
+            yellow,
+            orange
         }
 
         private void sendRequest(lib.BM_RCON rcon, lib.RequestType requestType, string body)
@@ -353,6 +355,8 @@ namespace BM_RCON.mods.betmode
 
                                 bool nextBetExists = !(bets[next_bet] == null);
                                 string msg = json_obj.Message;
+                                string playerName = json_obj.Name;
+
 
                                 int indexBetMsg = msg.IndexOf(strBetCmd);
                                 if (indexBetMsg != -1)
@@ -360,7 +364,17 @@ namespace BM_RCON.mods.betmode
                                     string potentialBetNumber = msg.Substring(indexBetMsg + strBetCmd.Length);
                                     if (isStringANumber(potentialBetNumber))
                                     {
+                                        if (nextBetExists)
+                                        {
+                                            // FIXME bet is already made, send votestate and number bet
+                                        }
                                         int betNumber = Int32.Parse(potentialBetNumber);
+                                        if (betNumber <= 0 || betNumber > 20)
+                                        {
+                                            sendPrivateMsg(rcon, playerName, "The bet should be between 1 and 20.", Color.orange);
+                                            break;
+                                        }
+                                        
                                     }
                                     else
                                     {
@@ -453,6 +467,10 @@ namespace BM_RCON.mods.betmode
         private void sendPrivateMsg(lib.BM_RCON rcon, Player player, string msg, Color color)
         {
             sendRequest(rcon, lib.RequestType.command, $"pm \"{player.Name}\" \"{msg}\" \"{colors[(int)color]}\"");
+        }
+        private void sendPrivateMsg(lib.BM_RCON rcon, string name, string msg, Color color)
+        {
+            sendRequest(rcon, lib.RequestType.command, $"pm \"{name}\" \"{msg}\" \"{colors[(int)color]}\"");
         }
     }
 }
