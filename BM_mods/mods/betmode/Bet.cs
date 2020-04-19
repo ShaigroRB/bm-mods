@@ -157,12 +157,19 @@ namespace BM_RCON.mods.betmode
                     break;
                 }
             }
-            return checkBetVotingState();
+            return isBetValidated();
         }
 
-        private bool? checkBetVotingState()
+        private bool? isBetValidated()
         {
             bool? votingStateForBet = null;
+            // votes: index based on enum VoteState
+            int[] votes = new int[5];
+
+            foreach (Player player in players_voting)
+            {
+                if (player != null )
+            }
 
             return votingStateForBet;
         }
