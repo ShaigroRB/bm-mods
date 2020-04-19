@@ -5,6 +5,7 @@
         YES,
         NO,
         NOTHING,
+        NEUTRAL,
         OFFLINE
     }
 }
