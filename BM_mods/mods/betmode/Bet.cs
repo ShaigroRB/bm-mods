@@ -169,15 +169,7 @@ namespace BM_RCON.mods.betmode
         {
             bool? isBetAccepted = null;
             // votes: index based on enum VoteState
-            int[] votes = new int[5];
-
-            foreach (Player player in players_voting)
-            {
-                if (player != null)
-                {
-                    votes[(int)player.Vote]++;
-                }
-            }
+            int[] votes = BetVotingState();
 
             if (votes[(int)VoteState.NOTHING] == 0)
             {
@@ -185,6 +177,19 @@ namespace BM_RCON.mods.betmode
             }
 
             return isBetAccepted;
+        }
+
+        public int[] BetVotingState()
+        {
+            int[] votes = new int[5];
+            foreach (Player player in players_voting)
+            {
+                if (player != null)
+                {
+                    votes[(int)player.Vote]++;
+                }
+            }
+            return votes;
         }
     }
 }
