@@ -143,5 +143,25 @@ namespace BM_RCON.mods.betmode
                 return this.vices;
             }
         }
+
+        public bool? SetPlayerVote(Player player_voting, VoteState voteState)
+        {
+            foreach (Player player in this.players_voting)
+            {
+                if (player.SameProfileAs(player_voting))
+                {
+                    player.Vote = player_voting.Vote;
+                    break;
+                }
+            }
+            return checkBetVotingState();
+        }
+
+        private bool? checkBetVotingState()
+        {
+            bool? votingStateForBet = null;
+
+            return votingStateForBet;
+        }
     }
 }
