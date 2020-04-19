@@ -368,6 +368,7 @@ namespace BM_RCON.mods.betmode
                                         {
                                             // FIXME bet is already made, send votestate and number bet
                                             sendPrivateMsg(rcon, playerName, "FIXME: bet exists", Color.purple);
+                                            break;
                                         }
                                         int betNumber = Int32.Parse(potentialBetNumber);
                                         if (betNumber <= 0 || betNumber > 20)
@@ -382,11 +383,16 @@ namespace BM_RCON.mods.betmode
                                             betNumber = nbPlayersConnected;
                                         }
                                         bets[next_bet] = new Bet(betNumber);
-                                        // FIXME: tell everyone a bet has been made
+                                        sendMsgToAll(rcon,
+                                            "A bet has been made. " +
+                                            $"{betNumber} is the number of people that need to survive to win the bet. " +
+                                            "Vote with !vote yes/no to accept the bet.",
+                                            Color.teal);
                                     }
                                     else
                                     {
                                         sendPrivateMsg(rcon, playerName, "!bet command is used like this: !bet <number>", Color.orange);
+                                        break;
                                     }
                                 }
                                 
