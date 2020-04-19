@@ -367,12 +367,19 @@ namespace BM_RCON.mods.betmode
                                         if (nextBetExists)
                                         {
                                             // FIXME bet is already made, send votestate and number bet
+                                            sendPrivateMsg(rcon, playerName, "FIXME: bet exists", Color.purple);
                                         }
                                         int betNumber = Int32.Parse(potentialBetNumber);
                                         if (betNumber <= 0 || betNumber > 20)
                                         {
                                             sendPrivateMsg(rcon, playerName, "The bet should be between 1 and 20.", Color.orange);
                                             break;
+                                        }
+                                        // if next bet does not exist and bet valid
+                                        int nbPlayersConnected = countNbPlayers(connected_players);
+                                        if (betNumber > nbPlayersConnected)
+                                        {
+                                            betNumber = nbPlayersConnected;
                                         }
                                         
                                     }
@@ -471,6 +478,19 @@ namespace BM_RCON.mods.betmode
         private void sendPrivateMsg(lib.BM_RCON rcon, string name, string msg, Color color)
         {
             sendRequest(rcon, lib.RequestType.command, $"pm \"{name}\" \"{msg}\" \"{colors[(int)color]}\"");
+        }
+
+        private int countNbPlayers(Player[] players)
+        {
+            int count = 0;
+            foreach (Player player in players)
+            {
+                if (player != null)
+                {
+                    count++;
+                }
+            }
+            return count;
         }
     }
 }
