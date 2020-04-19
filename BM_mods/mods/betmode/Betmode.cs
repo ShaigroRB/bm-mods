@@ -381,11 +381,12 @@ namespace BM_RCON.mods.betmode
                                         {
                                             betNumber = nbPlayersConnected;
                                         }
-                                        
+                                        bets[next_bet] = new Bet(betNumber);
+                                        // FIXME: tell everyone a bet has been made
                                     }
                                     else
                                     {
-                                        // FIXME: send mp to indicate how to use !bet command
+                                        sendPrivateMsg(rcon, playerName, "!bet command is used like this: !bet <number>", Color.orange);
                                     }
                                 }
                                 
