@@ -45,11 +45,13 @@
     - [ ] If true, for each enemies in Bet:
     	- [ ] Send request to spawn the enemy
 - [ ] chat_message:
-	- [ ] Check if next Bet exists
+	- [x] Check if next Bet exists
 	- [ ] Check what is written
-		- [ ] If !bet < number >
-			- [ ] If next Bet does not exists, create it
-			- [ ] Else, send a message indicating the next Bet and its voting state
+		- [x] If !bet < number >
+			- [x] If next Bet does not exists
+				- [x] Check if bet is valid
+				- [x] If yes, create next bet
+			- [x] Else, send a message indicating the next Bet and its voting state
 		- [ ] If !vote < y/n/yes/no >
 			- [ ] If next bet does not exists, send a message indicating no Bet has been made
 			- [ ] Else
@@ -61,3 +63,4 @@
 					- [ ] Set Players in Bet with connected_players
 					- [ ] If valid, set is_bet_flag_unlocked to true
 					- [ ] If not valid, set is_bet_flag_unlocked to false and set next Bet to null
+		- [ ] If !votestate, send bet vote state to player

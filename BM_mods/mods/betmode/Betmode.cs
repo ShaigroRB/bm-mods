@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using lib = BM_RCON.BM_RCON_lib;
@@ -11,6 +12,31 @@ namespace BM_RCON.mods.betmode
         const int port = 42070;
         const string addr = "127.0.0.1";
         const string passwd = "admin";
+
+
+
+        string[] colors = {
+            "#ff0000",
+            "#00ff00",
+            "#0000ff",
+            "#008080",
+            "#800080",
+            "#fff000",
+            "#ffa500",
+            "#10a5f5"
+        };
+
+        enum Color
+        {
+            red = 0,
+            green,
+            blue,
+            teal,
+            purple,
+            yellow,
+            orange,
+            light_blue
+        }
 
         private void sendRequest(lib.BM_RCON rcon, lib.RequestType requestType, string body)
         {
@@ -326,10 +352,54 @@ namespace BM_RCON.mods.betmode
                                     break;
                                 }
 
-                                if (!betExists(bets[next_bet]))
-                                {
+                                string strBetCmd = "!bet ";
+                                string strVoteCmd = "!vote ";
 
+                                bool nextBetExists = !(bets[next_bet] == null);
+                                string msg = json_obj.Message;
+                                string playerName = json_obj.Name;
+
+
+                                int indexBetMsg = msg.IndexOf(strBetCmd);
+                                if (indexBetMsg != -1)
+                                {
+                                    string potentialBetNumber = msg.Substring(indexBetMsg + strBetCmd.Length);
+                                    if (isStringANumber(potentialBetNumber))
+                                    {
+                                        if (nextBetExists)
+                                        {
+                                            sendPrivateMsg(rcon, playerName,
+                                                "A bet already exists. Bet's voting state will be sent to you.",
+                                                Color.orange);
+                                            displayBetVotingState(rcon, playerName, bets[next_bet]);
+                                            break;
+                                        }
+                                        int betNumber = Int32.Parse(potentialBetNumber);
+                                        if (betNumber <= 0 || betNumber > 20)
+                                        {
+                                            sendPrivateMsg(rcon, playerName, "The bet should be between 1 and 20.", Color.orange);
+                                            break;
+                                        }
+                                        // if next bet does not exist and bet valid
+                                        int nbPlayersConnected = countNbPlayers(connected_players);
+                                        if (betNumber > nbPlayersConnected)
+                                        {
+                                            betNumber = nbPlayersConnected;
+                                        }
+                                        bets[next_bet] = new Bet(betNumber, connected_players);
+                                        sendMsgToAll(rcon,
+                                            "A bet has been made. " +
+                                            $"{betNumber} is the number of people that need to survive to win the bet. " +
+                                            "Vote with !vote yes/no to accept the bet.",
+                                            Color.teal);
+                                    }
+                                    else
+                                    {
+                                        sendPrivateMsg(rcon, playerName, "!bet command is used like this: !bet <number>", Color.orange);
+                                        break;
+                                    }
                                 }
+                                
                             }
                             break;
                     }
@@ -407,9 +477,53 @@ namespace BM_RCON.mods.betmode
             }
         }
 
-        private bool betExists(Bet bet)
+        private bool isStringANumber(string msg)
         {
-            return bet == null;
+            return msg != "" && msg.All(char.IsDigit);
+        }
+
+        private void sendPrivateMsg(lib.BM_RCON rcon, Player player, string msg, Color color)
+        {
+            sendRequest(rcon, lib.RequestType.command, $"pm \"{player.Name}\" \"{msg}\" \"{colors[(int)color]}\"");
+        }
+        private void sendPrivateMsg(lib.BM_RCON rcon, string name, string msg, Color color)
+        {
+            sendRequest(rcon, lib.RequestType.command, $"pm \"{name}\" \"{msg}\" \"{colors[(int)color]}\"");
+        }
+
+        private int countNbPlayers(Player[] players)
+        {
+            int count = 0;
+            foreach (Player player in players)
+            {
+                if (player != null)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        private void sendMsgToAll(lib.BM_RCON rcon, string msg, Color color)
+        {
+            sendRequest(rcon, lib.RequestType.command, $"rawsay \"{msg}\" \"{colors[(int)color]}\"");
+        }
+
+        private void displayBetVotingState(lib.BM_RCON rcon, string playerName, Bet bet)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append("To accept/reject a bet, everyone needs to vote. ");
+            stringBuilder.Append("Votes: ");
+
+            var voteStates = Enum.GetValues(typeof(VoteState));
+            int[] votes = bet.BetVotingState();
+
+            foreach (VoteState voteState in voteStates)
+            {
+                stringBuilder.Append($"{voteState}: {votes[(int)voteState]}, ");
+            }
+
+            sendPrivateMsg(rcon, playerName, stringBuilder.ToString(), Color.light_blue);
         }
     }
 }
