@@ -19,8 +19,10 @@ namespace BM_RCON.mods.betmode
         Player[] players_in_bet;
         // players voting for the bet are the connected players before the bet is validated
         Player[] players_voting;
+        // nb players in voting (does not count null Player)
+        int nb_players_voting;
 
-        public Bet(int bet, Player[] players_voting)
+        public Bet(int bet, Player[] players_voting, int nb_players_voting)
         {
             // not a constant because we don't know yet no other enemies will be added
             int total_nb_enemies = Enum.GetNames(typeof(lib.EnemyID)).Length;
@@ -28,6 +30,7 @@ namespace BM_RCON.mods.betmode
             int total_nb_vices = 40;
 
             this.bet = bet;
+            this.nb_players_voting = nb_players_voting;
             this.enemies = new int[total_nb_enemies];
             this.vices = new int[total_nb_vices];
             // maximum of players in a server is 20 people
