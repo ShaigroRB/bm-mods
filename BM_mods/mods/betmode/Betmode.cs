@@ -22,7 +22,8 @@ namespace BM_RCON.mods.betmode
             "#008080",
             "#800080",
             "#fff000",
-            "#ffa500"
+            "#ffa500",
+            "#10a5f5"
         };
 
         enum Color
@@ -33,7 +34,8 @@ namespace BM_RCON.mods.betmode
             teal,
             purple,
             yellow,
-            orange
+            orange,
+            light_blue
         }
 
         private void sendRequest(lib.BM_RCON rcon, lib.RequestType requestType, string body)
@@ -510,8 +512,8 @@ namespace BM_RCON.mods.betmode
         private void displayBetVotingState(lib.BM_RCON rcon, string playerName, Bet bet)
         {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("To accept/reject a bet, everyone needs to vote.");
-            stringBuilder.Append("Votes:");
+            stringBuilder.Append("To accept/reject a bet, everyone needs to vote. ");
+            stringBuilder.Append("Votes: ");
 
             var voteStates = Enum.GetValues(typeof(VoteState));
             int[] votes = bet.BetVotingState();
@@ -521,7 +523,7 @@ namespace BM_RCON.mods.betmode
                 stringBuilder.Append($"{voteState}: {votes[(int)voteState]}, ");
             }
 
-            sendPrivateMsg(rcon, playerName, stringBuilder.ToString(), Color.teal);
+            sendPrivateMsg(rcon, playerName, stringBuilder.ToString(), Color.light_blue);
         }
     }
 }
