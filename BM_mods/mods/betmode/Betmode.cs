@@ -502,7 +502,7 @@ namespace BM_RCON.mods.betmode
 
         private void sendMsgToAll(lib.BM_RCON rcon, string msg, Color color)
         {
-            sendRequest(rcon, lib.RequestType.command, $"rawsay \"{msg}\" \"{color}\"");
+            sendRequest(rcon, lib.RequestType.command, $"rawsay \"{msg}\" \"{colors[(int)color]}\"");
         }
     }
 }
