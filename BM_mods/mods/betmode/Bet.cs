@@ -19,7 +19,6 @@ namespace BM_RCON.mods.betmode
         Player[] players_in_bet;
         // players voting for the bet are the connected players before the bet is validated
         Player[] players_voting;
-        int nb_players;
 
         public Bet(int bet)
         {
