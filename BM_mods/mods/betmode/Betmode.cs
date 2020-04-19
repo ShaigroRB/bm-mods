@@ -327,13 +327,16 @@ namespace BM_RCON.mods.betmode
                                     break;
                                 }
 
+                                string strBetCmd = "!bet ";
+                                string strVoteCmd = "!vote ";
+
                                 bool nextBetExists = !(bets[next_bet] == null);
                                 string msg = json_obj.Message;
 
-                                int indexBetMsg = msg.IndexOf("!bet ");
+                                int indexBetMsg = msg.IndexOf(strBetCmd);
                                 if (indexBetMsg != -1)
                                 {
-                                    string potentialBetNumber = msg.Substring(indexBetMsg + "!bet ".Length);
+                                    string potentialBetNumber = msg.Substring(indexBetMsg + strBetCmd.Length);
                                     if (isStringANumber(potentialBetNumber))
                                     {
                                         int betNumber = Int32.Parse(potentialBetNumber);
