@@ -382,7 +382,7 @@ namespace BM_RCON.mods.betmode
                                         {
                                             betNumber = nbPlayersConnected;
                                         }
-                                        bets[next_bet] = new Bet(betNumber);
+                                        bets[next_bet] = new Bet(betNumber, connected_players);
                                         sendMsgToAll(rcon,
                                             "A bet has been made. " +
                                             $"{betNumber} is the number of people that need to survive to win the bet. " +
