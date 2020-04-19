@@ -45,11 +45,13 @@
     - [ ] If true, for each enemies in Bet:
     	- [ ] Send request to spawn the enemy
 - [ ] chat_message:
-	- [ ] Check if next Bet exists
+	- [x] Check if next Bet exists
 	- [ ] Check what is written
 		- [ ] If !bet < number >
-			- [ ] If next Bet does not exists, create it
-			- [ ] Else, send a message indicating the next Bet and its voting state
+			- [ ] If next Bet does not exists
+				- [x] Check if bet is valid
+				- [ ] If yes, create next bet
+			- [x] Else, send a message indicating the next Bet and its voting state
 		- [ ] If !vote < y/n/yes/no >
 			- [ ] If next bet does not exists, send a message indicating no Bet has been made
 			- [ ] Else
