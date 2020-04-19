@@ -28,7 +28,6 @@ namespace BM_RCON.mods.betmode
             int total_nb_vices = 40;
 
             this.bet = bet;
-            this.nb_players_voting = nb_players_voting;
             this.enemies = new int[total_nb_enemies];
             this.vices = new int[total_nb_vices];
             // maximum of players in a server is 20 people
