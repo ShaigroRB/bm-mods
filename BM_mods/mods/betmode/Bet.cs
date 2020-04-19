@@ -20,7 +20,7 @@ namespace BM_RCON.mods.betmode
         // players voting for the bet are the connected players before the bet is validated
         Player[] players_voting;
 
-        public Bet(int bet)
+        public Bet(int bet, Player[] players_voting)
         {
             // not a constant because we don't know yet no other enemies will be added
             int total_nb_enemies = Enum.GetNames(typeof(lib.EnemyID)).Length;
@@ -35,6 +35,7 @@ namespace BM_RCON.mods.betmode
             this.players_voting = new Player[20];
 
             // update players voting
+            Array.Copy(players_voting, this.players_voting, players_voting.Length);
 
             randomizeBosses();
             randomizeVices();
