@@ -147,7 +147,15 @@ namespace BM_RCON.mods.betmode
             }
         }
 
-        public bool? SetPlayerVote(Player player_voting, VoteState voteState)
+        /// <summary>
+        /// Set player vote for the bet and return if the bet is accepted
+        /// </summary>
+        /// <param name="player_voting">The player voting</param>
+        /// <returns>
+        /// If at least one player did not vote, returns null
+        /// Otherwise, returns true if bet accepted or false if bet rejected
+        /// </returns>
+        public bool? SetPlayerVote(Player player_voting)
         {
             foreach (Player player in this.players_voting)
             {
