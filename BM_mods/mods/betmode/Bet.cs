@@ -62,7 +62,7 @@ namespace BM_RCON.mods.betmode
             for (int i = 0; i < this.bet; i++)
             {
                 vice = rnd.Next(first_vice, last_vice);
-                this.enemies[vice] += 1;
+                this.vices[vice] += 1;
             }
         }
 
@@ -124,12 +124,19 @@ namespace BM_RCON.mods.betmode
 
         public int[] Enemies
         {
-            get;
+            get
+            {
+                return this.enemies;
+            }
         }
 
         public int[] Vices
         {
-            get;
+            get
+            {
+                return this.vices;
+            }
         }
+
     }
 }
