@@ -330,7 +330,19 @@ namespace BM_RCON.mods.betmode
                                 bool nextBetExists = !(bets[next_bet] == null);
                                 string msg = json_obj.Message;
 
-                                int indexBetMsg = msg.IndexOf("!bet");
+                                int indexBetMsg = msg.IndexOf("!bet ");
+                                if (indexBetMsg != -1)
+                                {
+                                    string potentialBetNumber = msg.Substring(indexBetMsg + "!bet ".Length);
+                                    if (isStringANumber(potentialBetNumber))
+                                    {
+                                        int betNumber = Int32.Parse(potentialBetNumber);
+                                    }
+                                    else
+                                    {
+                                        // FIXME: send mp to indicate how to use !bet command
+                                    }
+                                }
                                 
                             }
                             break;
