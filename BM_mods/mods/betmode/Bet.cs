@@ -17,9 +17,12 @@ namespace BM_RCON.mods.betmode
         int[] vices;
         // players in bet are the connected players when the flag unlocks for the next wave
         Player[] players_in_bet;
-        int nb_players;
+        // players voting for the bet are the connected players before the bet is validated
+        Player[] players_voting;
+        // nb players in voting (does not count null Player)
+        int nb_players_voting;
 
-        public Bet(int bet)
+        public Bet(int bet, Player[] players_voting, int nb_players_voting)
         {
             // not a constant because we don't know yet no other enemies will be added
             int total_nb_enemies = Enum.GetNames(typeof(lib.EnemyID)).Length;
@@ -27,10 +30,15 @@ namespace BM_RCON.mods.betmode
             int total_nb_vices = 40;
 
             this.bet = bet;
+            this.nb_players_voting = nb_players_voting;
             this.enemies = new int[total_nb_enemies];
             this.vices = new int[total_nb_vices];
             // maximum of players in a server is 20 people
             this.players_in_bet = new Player[20];
+            this.players_voting = new Player[20];
+
+            // update players voting
+            Array.Copy(players_voting, this.players_voting, players_voting.Length);
 
             randomizeBosses();
             randomizeVices();
@@ -66,10 +74,9 @@ namespace BM_RCON.mods.betmode
             }
         }
 
-        public void SetPlayersInBet(Player[] players, int nb_players)
+        public void SetPlayersInBet(Player[] players)
         {
-            Array.Copy(players, this.players_in_bet, nb_players);
-            this.nb_players = nb_players;
+            Array.Copy(players, this.players_in_bet, players.Length);
         }
 
         private void clearAllArrays()
@@ -91,12 +98,13 @@ namespace BM_RCON.mods.betmode
         public bool IsBetWon()
         {
             bool is_bet_won = false;
-            int nb_players = this.nb_players;
+            int nb_players = this.players_in_bet.Length;
             int nb_players_alive = 0;
 
             for (int i = 0; !is_bet_won && i < nb_players; i++)
             {
-                if (this.players_in_bet[i].IsAlive)
+                Player currentPlayer = this.players_in_bet[i];
+                if (currentPlayer != null && currentPlayer.IsAlive)
                 {
                     nb_players_alive++;
                     if (nb_players_alive >= this.bet)
@@ -110,13 +118,14 @@ namespace BM_RCON.mods.betmode
 
         public void UpdateDeadPlayer(Player player)
         {
-            int nb_players = this.nb_players;
+            int nb_players = this.players_in_bet.Length;
             bool is_player_found = false;
             for (int i = 0; !is_player_found && i < nb_players; i++)
             {
-                if (this.players_in_bet[i].SameProfileAs(player))
+                Player currentPlayer = this.players_in_bet[i];
+                if (currentPlayer != null && currentPlayer.SameProfileAs(player))
                 {
-                    this.players_in_bet[i].IsAlive = false;
+                    currentPlayer.IsAlive = false;
                     is_player_found = true;
                 }
             }
@@ -138,5 +147,24 @@ namespace BM_RCON.mods.betmode
             }
         }
 
+        public bool? SetPlayerVote(Player player_voting, VoteState voteState)
+        {
+            foreach (Player player in this.players_voting)
+            {
+                if (player.SameProfileAs(player_voting))
+                {
+                    player.Vote = player_voting.Vote;
+                    break;
+                }
+            }
+            return checkBetVotingState();
+        }
+
+        private bool? checkBetVotingState()
+        {
+            bool? votingStateForBet = null;
+
+            return votingStateForBet;
+        }
     }
 }
