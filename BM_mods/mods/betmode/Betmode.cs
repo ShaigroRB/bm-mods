@@ -366,8 +366,10 @@ namespace BM_RCON.mods.betmode
                                     {
                                         if (nextBetExists)
                                         {
-                                            // FIXME bet is already made, send votestate and number bet
-                                            sendPrivateMsg(rcon, playerName, "FIXME: bet exists", Color.purple);
+                                            sendPrivateMsg(rcon, playerName,
+                                                "A bet already exists. Bet's voting state will be sent to you.",
+                                                Color.orange);
+                                            displayBetVotingState(rcon, playerName, bets[next_bet]);
                                             break;
                                         }
                                         int betNumber = Int32.Parse(potentialBetNumber);
@@ -503,6 +505,23 @@ namespace BM_RCON.mods.betmode
         private void sendMsgToAll(lib.BM_RCON rcon, string msg, Color color)
         {
             sendRequest(rcon, lib.RequestType.command, $"rawsay \"{msg}\" \"{colors[(int)color]}\"");
+        }
+
+        private void displayBetVotingState(lib.BM_RCON rcon, string playerName, Bet bet)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("To accept/reject a bet, everyone needs to vote.");
+            stringBuilder.Append("Votes:");
+
+            var voteStates = Enum.GetValues(typeof(VoteState));
+            int[] votes = bet.BetVotingState();
+
+            foreach (VoteState voteState in voteStates)
+            {
+                stringBuilder.Append($"{voteState}: {votes[(int)voteState]}, ");
+            }
+
+            sendPrivateMsg(rcon, playerName, stringBuilder.ToString(), Color.teal);
         }
     }
 }
