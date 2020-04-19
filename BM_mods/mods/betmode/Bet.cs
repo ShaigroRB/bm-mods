@@ -71,10 +71,9 @@ namespace BM_RCON.mods.betmode
             }
         }
 
-        public void SetPlayersInBet(Player[] players, int nb_players)
+        public void SetPlayersInBet(Player[] players)
         {
-            Array.Copy(players, this.players_in_bet, nb_players);
-            this.nb_players = nb_players;
+            Array.Copy(players, this.players_in_bet, players.Length);
         }
 
         private void clearAllArrays()
