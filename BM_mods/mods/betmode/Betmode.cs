@@ -344,7 +344,7 @@ namespace BM_RCON.mods.betmode
 
                         case lib.EventType.chat_message:
                             {
-                                logger.Log("[FIXME] chat_message");
+                                logger.Log("[FIXME] !vote & !votestate & !help");
                                 
                                 // chat message sent by the server
                                 if (json_obj.PlayerID == -1)
@@ -352,7 +352,6 @@ namespace BM_RCON.mods.betmode
                                     break;
                                 }
 
-                                string strBetCmd = "!bet ";
                                 string strVoteCmd = "!vote ";
 
                                 bool nextBetExists = !(bets[next_bet] == null);
@@ -360,44 +359,10 @@ namespace BM_RCON.mods.betmode
                                 string playerName = json_obj.Name;
 
 
-                                int indexBetMsg = msg.IndexOf(strBetCmd);
-                                if (indexBetMsg != -1)
+                                if (!isBetCommand(bets, connected_players, playerName, msg, rcon))
                                 {
-                                    string potentialBetNumber = msg.Substring(indexBetMsg + strBetCmd.Length);
-                                    if (isStringANumber(potentialBetNumber))
-                                    {
-                                        if (nextBetExists)
-                                        {
-                                            sendPrivateMsg(rcon, playerName,
-                                                "A bet already exists. Bet's voting state will be sent to you.",
-                                                Color.orange);
-                                            displayBetVotingState(rcon, playerName, bets[next_bet]);
-                                            break;
-                                        }
-                                        int betNumber = Int32.Parse(potentialBetNumber);
-                                        if (betNumber <= 0 || betNumber > 20)
-                                        {
-                                            sendPrivateMsg(rcon, playerName, "The bet should be between 1 and 20.", Color.orange);
-                                            break;
-                                        }
-                                        // if next bet does not exist and bet valid
-                                        int nbPlayersConnected = countNbPlayers(connected_players);
-                                        if (betNumber > nbPlayersConnected)
-                                        {
-                                            betNumber = nbPlayersConnected;
-                                        }
-                                        bets[next_bet] = new Bet(betNumber, connected_players);
-                                        sendMsgToAll(rcon,
-                                            "A bet has been made. " +
-                                            $"{betNumber} is the number of people that need to survive to win the bet. " +
-                                            "Vote with !vote yes/no to accept the bet.",
-                                            Color.teal);
-                                    }
-                                    else
-                                    {
-                                        sendPrivateMsg(rcon, playerName, "!bet command is used like this: !bet <number>", Color.orange);
-                                        break;
-                                    }
+                                    logger.Log("[FIXME] !vote check");
+                                    sendMsgToAll(rcon, "[FIXME] !vote check", Color.purple);
                                 }
                                 
                             }
@@ -524,6 +489,57 @@ namespace BM_RCON.mods.betmode
             }
 
             sendPrivateMsg(rcon, playerName, stringBuilder.ToString(), Color.light_blue);
+        }
+
+        private bool isBetCommand(Bet[] bets,Player[] players,
+                                    string playerName, string msg, lib.BM_RCON rcon)
+        {
+            string strBetCmd = "!bet ";
+            int nextBetIndex = 1;
+            bool nextBetExists = bets[nextBetIndex] != null;
+
+            int indexBetMsg = msg.IndexOf(strBetCmd);
+            bool isBetCommand = (indexBetMsg != -1);
+
+            if (isBetCommand)
+            {
+                string potentialBetNumber = msg.Substring(indexBetMsg + strBetCmd.Length);
+                if (isStringANumber(potentialBetNumber))
+                {
+                    if (nextBetExists)
+                    {
+                        sendPrivateMsg(rcon, playerName,
+                            "A bet already exists. Bet's voting state will be sent to you.",
+                            Color.orange);
+                        displayBetVotingState(rcon, playerName, bets[nextBetIndex]);
+                        return isBetCommand;
+                    }
+                    int betNumber = Int32.Parse(potentialBetNumber);
+                    if (betNumber <= 0 || betNumber > 20)
+                    {
+                        sendPrivateMsg(rcon, playerName, "The bet should be between 1 and 20.", Color.orange);
+                        return isBetCommand;
+                    }
+                    // if next bet does not exist and bet valid
+                    int nbPlayersConnected = countNbPlayers(players);
+                    if (betNumber > nbPlayersConnected)
+                    {
+                        betNumber = nbPlayersConnected;
+                    }
+                    bets[nextBetIndex] = new Bet(betNumber, players);
+                    sendMsgToAll(rcon,
+                        "A bet has been made. " +
+                        $"{betNumber} is the number of people that need to survive to win the bet. " +
+                        "Vote with !vote yes/no to accept the bet.",
+                        Color.teal);
+                }
+                else
+                {
+                    sendPrivateMsg(rcon, playerName, "!bet command is used like this: !bet <number>", Color.orange);
+                    return isBetCommand;
+                }
+            }
+            return isBetCommand;
         }
     }
 }
