@@ -363,6 +363,19 @@ namespace BM_RCON.mods.betmode
                                 {
                                     logger.Log("[FIXME] !vote check");
                                     sendMsgToAll(rcon, "[FIXME] !vote check", Color.purple);
+
+                                    // !vote command
+                                    int indexVoteMsg = msg.IndexOf(strVoteCmd);
+                                    bool isVoteCommand = indexVoteMsg != -1;
+                                    if (isVoteCommand)
+                                    {
+                                        if (!nextBetExists)
+                                        {
+                                            sendPrivateMsg(rcon, playerName, "No bet exists", Color.orange);
+                                            break;
+                                        }
+
+                                    }
                                 }
                                 
                             }
@@ -491,7 +504,7 @@ namespace BM_RCON.mods.betmode
             sendPrivateMsg(rcon, playerName, stringBuilder.ToString(), Color.light_blue);
         }
 
-        private bool isBetCommand(Bet[] bets,Player[] players,
+        private bool isBetCommand(Bet[] bets, Player[] players,
                                     string playerName, string msg, lib.BM_RCON rcon)
         {
             string strBetCmd = "!bet ";
