@@ -371,7 +371,7 @@ namespace BM_RCON.mods.betmode
                                     {
                                         if (!nextBetExists)
                                         {
-                                            sendPrivateMsg(rcon, playerName, "No bet exists", Color.orange);
+                                            sendPrivateMsg(rcon, playerName, "No bet exists. Make one with !bet <number>", Color.orange);
                                             break;
                                         }
 
@@ -543,12 +543,12 @@ namespace BM_RCON.mods.betmode
                     sendMsgToAll(rcon,
                         "A bet has been made. " +
                         $"{betNumber} is the number of people that need to survive to win the bet. " +
-                        "Vote with !vote yes/no to accept the bet.",
+                        "Type !vote yes/no/dunno to vote for the bet.",
                         Color.teal);
                 }
                 else
                 {
-                    sendPrivateMsg(rcon, playerName, "!bet command is used like this: !bet <number>", Color.orange);
+                    sendPrivateMsg(rcon, playerName, "!bet command is used like this: !bet <positive number>", Color.orange);
                     return isBetCommand;
                 }
             }
