@@ -358,7 +358,8 @@ namespace BM_RCON.mods.betmode
                                 string msg = json_obj.Message;
                                 string playerName = json_obj.Name;
 
-
+                                // FIXME: check for !bet written at the start of the sentence
+                                // TODO: separate !bet command from !vote command
                                 if (!isBetCommand(bets, connected_players, playerName, msg, rcon))
                                 {
                                     logger.Log("[FIXME] !vote check");
@@ -371,10 +372,27 @@ namespace BM_RCON.mods.betmode
                                     {
                                         if (!nextBetExists)
                                         {
-                                            sendPrivateMsg(rcon, playerName, "No bet exists. Make one with !bet <number>", Color.orange);
+                                            sendPrivateMsg(rcon, playerName, "No bet exists. Make one with !bet <positive number>", Color.orange);
                                             break;
                                         }
 
+                                        string[] yeses = { "yes", "y" };
+                                        string[] noes = { "no", "n" };
+                                        string[] neutral = { "neutral", "dunno", "d" };
+
+                                        string vote = msg.Substring(indexVoteMsg + strVoteCmd.Length);
+                                        bool[] voteTypes = {
+                                            yeses.Contains(vote),
+                                            noes.Contains(vote),
+                                            neutral.Contains(vote)
+                                        };
+
+                                        int index = Array.IndexOf(voteTypes, true);
+                                        if (index == -1)
+                                        {
+                                            sendPrivateMsg(rcon, playerName, "Only vote with !vote <yes/no/dunno>", Color.orange);
+                                            break;
+                                        }
                                     }
                                 }
                                 
