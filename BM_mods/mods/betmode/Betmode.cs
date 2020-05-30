@@ -145,6 +145,9 @@ namespace BM_RCON.mods.betmode
             Player[] connected_players = new Player[20];
             Player[] disconnected_players = new Player[200];
 
+            // is there a bet ? (starts when flag_unlocked is received)
+            bool is_bet_flag_unlocked = false;
+
             // start doing stuff
             int amout_of_games = 0;
 
@@ -354,7 +357,8 @@ namespace BM_RCON.mods.betmode
 
                                 string strVoteCmd = "!vote ";
 
-                                bool nextBetExists = !(bets[next_bet] == null);
+                                Bet nextBet = bets[next_bet];
+                                bool nextBetExists = !(nextBet == null);
                                 string msg = json_obj.Message;
                                 string playerName = json_obj.Name;
 
@@ -392,6 +396,32 @@ namespace BM_RCON.mods.betmode
                                         {
                                             sendPrivateMsg(rcon, playerName, "Only vote with !vote <yes/no/dunno>", Color.orange);
                                             break;
+                                        }
+
+                                        Profile profile = createProfile(json_obj.Profile.ToString());
+                                        int indexPlayer = indexPlayerGivenProfile(connected_players, profile);
+                                        Player player = connected_players[indexPlayer];
+
+                                        player.Vote = (VoteState)index;
+
+                                        bool? isBetValidated = nextBet.SetPlayerVote(player);
+                                        // if bet == null, everyone did not vote yet
+                                        if (isBetValidated != null)
+                                        {
+                                            // whether the vote is accepted or not, reinitialize every vote
+                                            displayBetVotingState(rcon, playerName, nextBet);
+                                            setAllPlayersVotes(connected_players, VoteState.NOTHING);
+
+                                            if ((bool)isBetValidated)
+                                            {
+                                                nextBet.SetPlayersInBet(connected_players);
+                                                is_bet_flag_unlocked = true;
+                                            }
+                                            else
+                                            {
+                                                is_bet_flag_unlocked = false;
+                                                bets[next_bet] = null;
+                                            }
                                         }
                                     }
                                 }
@@ -571,6 +601,17 @@ namespace BM_RCON.mods.betmode
                 }
             }
             return isBetCommand;
+        }
+
+        private void setAllPlayersVotes(Player[] players, VoteState vote)
+        {
+            foreach (Player player in players)
+            {
+                if (player != null)
+                {
+                    player.Vote = vote;
+                }
+            }
         }
     }
 }
