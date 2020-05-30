@@ -409,7 +409,6 @@ namespace BM_RCON.mods.betmode
                                         if (isBetValidated != null)
                                         {
                                             // whether the vote is accepted or not, reinitialize every vote
-                                            displayBetVotingState(rcon, playerName, nextBet);
                                             setAllPlayersVotes(connected_players, VoteState.NOTHING);
 
                                             if ((bool)isBetValidated)

@@ -52,16 +52,16 @@
 				- [x] Check if bet is valid
 				- [x] If yes, create next bet
 			- [x] Else, send a message indicating the next Bet and its voting state
-		- [ ] If !vote < y/n/yes/no/neutral/dunno >
-			- [ ] If next bet does not exists, send a message indicating no Bet has been made
-			- [ ] Else
-				- [ ] Get profile from Player
-				- [ ] For the Player in connected_players with the same profile, set its Vote
-				- [ ] Check if vote for the next bet is finished
-				- [ ] If yes, check if next Bet is validated:
-        			- [ ] Set Vote of all connected_players to NOTHING
-					- [ ] Set Players in Bet with connected_players
-					- [ ] If validated, set is_bet_flag_unlocked to true
-					- [ ] If not validated, set is_bet_flag_unlocked to false and set next Bet to null
+		- [x] If !vote < y/n/yes/no/neutral/dunno >
+			- [x] If next bet does not exists, send a message indicating no Bet has been made
+			- [x] Else
+				- [x] Get profile from Player
+				- [x] For the Player in connected_players with the same profile, set its Vote
+				- [x] Check if vote for the next bet is finished
+				- [x] If yes, check if next Bet is validated:
+        			- [x] Set Vote of all connected_players to NOTHING
+					- [x] Set Players in Bet with connected_players
+					- [x] If validated, set is_bet_flag_unlocked to true
+					- [x] If not validated, set is_bet_flag_unlocked to false and set next Bet to null
 		- [ ] If !votestate, send bet vote state to player
 		- [ ] If !help, send help for commands
