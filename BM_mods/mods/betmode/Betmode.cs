@@ -133,7 +133,7 @@ namespace BM_RCON.mods.betmode
             // init variables
             lib.BM_RCON rcon = new lib.BM_RCON(addr, port, passwd, logger);
             lib.RCON_Event latest_evt;
-            bool ongoing_game;
+            bool ongoing_game = true;
             lib.EventType latest_evt_type;
             dynamic json_obj;
 
@@ -144,6 +144,9 @@ namespace BM_RCON.mods.betmode
 
             Player[] connected_players = new Player[20];
             Player[] disconnected_players = new Player[200];
+
+            int nb_connected_players = 0;
+            int nb_disconnected_players = 0;
 
             // is there a bet ? (starts when flag_unlocked is received)
             bool is_bet_flag_unlocked = false;
@@ -158,8 +161,6 @@ namespace BM_RCON.mods.betmode
 
             while (amount_of_games < 10)
             {
-
-                ongoing_game = true;
                 while (ongoing_game)
                 {
                     latest_evt = receiveEvt(rcon);
@@ -186,6 +187,9 @@ namespace BM_RCON.mods.betmode
                                 Profile profile_connect = createProfile((string)json_obj.Profile, (string)json_obj.Store);
                                 int index = indexPlayerGivenProfile(disconnected_players, profile_connect);
                                 int null_index = indexFirstNull(connected_players);
+
+                                nb_connected_players++;
+                                nb_disconnected_players--;
                                 // if player exists (already joined the ongoing game before)
                                 if (index != -1)
                                 {
@@ -199,7 +203,8 @@ namespace BM_RCON.mods.betmode
                                     {
                                         disconnected_players[index].Connected();
                                         connected_players[null_index] = disconnected_players[index];
-                                        disconnected_players[index] = null;
+                                        disconnected_players[index] = disconnected_players[nb_disconnected_players];
+                                        disconnected_players[nb_disconnected_players] = null;
                                     }
                                 }
                                 // if first time player joined the ongoing game
@@ -220,6 +225,9 @@ namespace BM_RCON.mods.betmode
                                 int index = indexPlayerGivenProfile(connected_players, profile_disconnect);
                                 int null_index = indexFirstNull(disconnected_players);
 
+                                nb_connected_players--;
+                                nb_disconnected_players++;
+
                                 Player player = connected_players[index];
 
                                 player.Disconnected();
@@ -232,7 +240,8 @@ namespace BM_RCON.mods.betmode
                                 }
 
                                 disconnected_players[null_index] = connected_players[index];
-                                connected_players[index] = null;
+                                connected_players[index] = connected_players[nb_connected_players];
+                                connected_players[nb_connected_players] = null;
 
                                 // display all disconnected players
                                 printPlayers(disconnected_players, false, logger);
@@ -356,29 +365,26 @@ namespace BM_RCON.mods.betmode
                                     break;
                                 }
 
-                                string strVoteCmd = "!vote ";
-
-                                Bet nextBet = bets[next_bet];
-                                bool nextBetExists = !(nextBet == null);
                                 string msg = json_obj.Message;
                                 string playerName = json_obj.Name;
 
                                 // FIXME: check for !bet written at the start of the sentence
                                 // TODO: separate !bet command from !vote command
-                                bool is_bet_cmd = isBetCommand(bets, connected_players, playerName, msg, rcon);
-                                if (!is_bet_cmd)
+                                bool is_bet_cmd = isBetCommand(bets, connected_players, nb_connected_players, playerName, msg, rcon);
+                                if (is_bet_cmd)
                                 {
-                                    // !vote command
-                                    bool is_vote_cmd = false;
-                                    (is_vote_cmd, is_bet_flag_unlocked) = isVoteCommand(bets, connected_players, playerName, msg, rcon);
-
-                                    if (!is_vote_cmd)
-                                    {
-                                        // !votestate command
-                                        // !help command
-                                    }
+                                    break;
                                 }
-                                
+                                bool is_vote_cmd;
+                                (is_vote_cmd, is_bet_flag_unlocked) = isVoteCommand(bets, connected_players, playerName, msg, rcon);
+
+                                if (is_vote_cmd)
+                                {
+                                    break;
+                                }
+                                // !votestate command
+                                // !help command
+
                             }
                             break;
                     }
@@ -526,7 +532,7 @@ namespace BM_RCON.mods.betmode
             sendPrivateMsg(rcon, playerName, stringBuilder.ToString(), Color.light_blue);
         }
 
-        private bool isBetCommand(Bet[] bets, Player[] players,
+        private bool isBetCommand(Bet[] bets, Player[] players, int nbPlayersConnected,
                                     string playerName, string msg, lib.BM_RCON rcon)
         {
             string strBetCmd = "!bet ";
@@ -556,7 +562,6 @@ namespace BM_RCON.mods.betmode
                         return isBetCommand;
                     }
                     // if next bet does not exist and bet valid
-                    int nbPlayersConnected = countNbPlayers(players);
                     if (betNumber > nbPlayersConnected)
                     {
                         betNumber = nbPlayersConnected;
