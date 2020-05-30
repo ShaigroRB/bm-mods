@@ -149,14 +149,14 @@ namespace BM_RCON.mods.betmode
             bool is_bet_flag_unlocked = false;
 
             // start doing stuff
-            int amout_of_games = 0;
+            int amount_of_games = 0;
 
             rcon.Connect();
 
             // enable mutators before anything else
             sendRequest(rcon, lib.RequestType.command, "enablemutators");
 
-            while (amout_of_games < 10)
+            while (amount_of_games < 10)
             {
 
                 ongoing_game = true;
@@ -193,7 +193,7 @@ namespace BM_RCON.mods.betmode
                                     {
                                         logger.LogError("PROBLEM: more than 20 players in server should be impossible.");
                                         ongoing_game = false;
-                                        amout_of_games = 10;
+                                        amount_of_games = 10;
                                     }
                                     else
                                     {
@@ -227,6 +227,7 @@ namespace BM_RCON.mods.betmode
 
                                 if (bets[current_bet] != null)
                                 {
+                                    // TODO: update vote of player
                                     bets[current_bet].UpdateDeadPlayer(player);
                                 }
 
@@ -364,64 +365,17 @@ namespace BM_RCON.mods.betmode
 
                                 // FIXME: check for !bet written at the start of the sentence
                                 // TODO: separate !bet command from !vote command
-                                if (!isBetCommand(bets, connected_players, playerName, msg, rcon))
+                                bool is_bet_cmd = isBetCommand(bets, connected_players, playerName, msg, rcon);
+                                if (!is_bet_cmd)
                                 {
-                                    logger.Log("[FIXME] !vote check");
-                                    sendMsgToAll(rcon, "[FIXME] !vote check", Color.purple);
-
                                     // !vote command
-                                    int indexVoteMsg = msg.IndexOf(strVoteCmd);
-                                    bool isVoteCommand = indexVoteMsg != -1;
-                                    if (isVoteCommand)
+                                    bool is_vote_cmd = false;
+                                    (is_vote_cmd, is_bet_flag_unlocked) = isVoteCommand(bets, connected_players, playerName, msg, rcon);
+
+                                    if (!is_vote_cmd)
                                     {
-                                        if (!nextBetExists)
-                                        {
-                                            sendPrivateMsg(rcon, playerName, "No bet exists. Make one with !bet <positive number>", Color.orange);
-                                            break;
-                                        }
-
-                                        string[] yeses = { "yes", "y" };
-                                        string[] noes = { "no", "n" };
-                                        string[] neutral = { "neutral", "dunno", "d" };
-
-                                        string vote = msg.Substring(indexVoteMsg + strVoteCmd.Length);
-                                        bool[] voteTypes = {
-                                            yeses.Contains(vote),
-                                            noes.Contains(vote),
-                                            neutral.Contains(vote)
-                                        };
-
-                                        int index = Array.IndexOf(voteTypes, true);
-                                        if (index == -1)
-                                        {
-                                            sendPrivateMsg(rcon, playerName, "Only vote with !vote <yes/no/dunno>", Color.orange);
-                                            break;
-                                        }
-
-                                        Profile profile = createProfile(json_obj.Profile.ToString());
-                                        int indexPlayer = indexPlayerGivenProfile(connected_players, profile);
-                                        Player player = connected_players[indexPlayer];
-
-                                        player.Vote = (VoteState)index;
-
-                                        bool? isBetValidated = nextBet.SetPlayerVote(player);
-                                        // if bet == null, everyone did not vote yet
-                                        if (isBetValidated != null)
-                                        {
-                                            // whether the vote is accepted or not, reinitialize every vote
-                                            setAllPlayersVotes(connected_players, VoteState.NOTHING);
-
-                                            if ((bool)isBetValidated)
-                                            {
-                                                nextBet.SetPlayersInBet(connected_players);
-                                                is_bet_flag_unlocked = true;
-                                            }
-                                            else
-                                            {
-                                                is_bet_flag_unlocked = false;
-                                                bets[next_bet] = null;
-                                            }
-                                        }
+                                        // !votestate command
+                                        // !help command
                                     }
                                 }
                                 
@@ -429,7 +383,7 @@ namespace BM_RCON.mods.betmode
                             break;
                     }
                 }
-                amout_of_games++;
+                amount_of_games++;
             }
 
             rcon.Disconnect();
@@ -453,6 +407,27 @@ namespace BM_RCON.mods.betmode
                 else
                 {
                     if (players[i].SameProfileAs(profile))
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+            return index;
+        }
+
+        private int indexPlayerGivenName(Player[] players, string playerName)
+        {
+            int index = -1;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i] == null)
+                {
+                    break;
+                }
+                else
+                {
+                    if (players[i].Name == playerName)
                     {
                         index = i;
                         break;
@@ -611,6 +586,70 @@ namespace BM_RCON.mods.betmode
                     player.Vote = vote;
                 }
             }
+        }
+
+        private (bool, bool) isVoteCommand(Bet[] bets, Player[] players,
+                                    string playerName, string msg, lib.BM_RCON rcon)
+        {
+            string strVoteCmd = "!vote ";
+            int next_bet = 1;
+            Bet nextBet = bets[next_bet];
+            bool is_bet_flag_unlocked = false;
+
+            int indexVoteMsg = msg.IndexOf(strVoteCmd);
+            bool isVoteCommand = indexVoteMsg != -1;
+            if (isVoteCommand)
+            {
+
+                if (nextBet == null)
+                {
+                    sendPrivateMsg(rcon, playerName, "No bet exists. Make one with !bet <positive number>", Color.orange);
+                    return (isVoteCommand, is_bet_flag_unlocked);
+                }
+
+                string[] yeses = { "yes", "y" };
+                string[] noes = { "no", "n" };
+                string[] neutral = { "neutral", "dunno", "d" };
+
+                string vote = msg.Substring(indexVoteMsg + strVoteCmd.Length);
+                bool[] voteTypes = {
+                    yeses.Contains(vote),
+                    noes.Contains(vote),
+                    neutral.Contains(vote)
+                };
+
+                int index = Array.IndexOf(voteTypes, true);
+                if (index == -1)
+                {
+                    sendPrivateMsg(rcon, playerName, "Only vote with !vote <yes/no/dunno>", Color.orange);
+                    return (isVoteCommand, is_bet_flag_unlocked);
+                }
+
+                int indexPlayer = indexPlayerGivenName(players, playerName);
+                Player player = players[indexPlayer];
+
+                player.Vote = (VoteState)index;
+
+                bool? isBetValidated = nextBet.SetPlayerVote(player);
+                // if bet == null, everyone did not vote yet
+                if (isBetValidated != null)
+                {
+                    // whether the vote is accepted or not, reinitialize every vote
+                    setAllPlayersVotes(players, VoteState.NOTHING);
+
+                    if ((bool)isBetValidated)
+                    {
+                        nextBet.SetPlayersInBet(players);
+                        is_bet_flag_unlocked = true;
+                    }
+                    else
+                    {
+                        is_bet_flag_unlocked = false;
+                        bets[next_bet] = null;
+                    }
+                }
+            }
+            return (isVoteCommand, is_bet_flag_unlocked);
         }
     }
 }
