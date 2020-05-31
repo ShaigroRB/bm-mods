@@ -156,7 +156,7 @@ namespace BM_RCON.mods.betmode
         {
             foreach (Player player in this.players_voting)
             {
-                if (player.SameProfileAs(player_voting))
+                if (player != null && player.SameProfileAs(player_voting))
                 {
                     player.Vote = player_voting.Vote;
                     break;
