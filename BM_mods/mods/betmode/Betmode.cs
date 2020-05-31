@@ -182,8 +182,12 @@ namespace BM_RCON.mods.betmode
 
                                 if (bets[current_bet] != null)
                                 {
-                                    // TODO: update vote of player
                                     bets[current_bet].UpdateDeadPlayer(player);
+                                }
+                                if (bets[next_bet] != null)
+                                {
+                                    player.Vote = VoteState.OFFLINE;
+                                    bets[next_bet].SetPlayerVote(player);
                                 }
 
                                 disconnected_players[null_index] = connected_players[index];
@@ -330,7 +334,27 @@ namespace BM_RCON.mods.betmode
                                     break;
                                 }
                                 // !votestate command
+                                bool is_votestate_command = isVoteStateCommand(bets[next_bet], playerName, msg, rcon);
+                                if (is_votestate_command)
+                                {
+                                    break;
+                                }
                                 // !help command
+                                string strHelpCommand = "!help";
+
+                                int indexHelpMsg = msg.IndexOf(strHelpCommand);
+                                if (indexHelpMsg != -1)
+                                {
+                                    StringBuilder stringBuilder = new StringBuilder();
+                                    /*
+                                     * you bet the minimum *number of people who will survive through the next wave without dying
+             * -the next wave will spawn the same amount of bosses than the* number bet
+            * - if the bet is won, every player will earn a* number of random vices
+            * */
+                                    stringBuilder.Append("Betmode is a mod where you bet on the minimum amount of people who have to survive through the next wave without dying to gain rewards. ");
+                                    stringBuilder.Append("!bet <number> to start a bet. !vote <yes/no/dunno> to vote for a bet. !votestate to know the voting state of a bet. !help to display this help");
+                                    sendPrivateMsg(rcon, playerName, stringBuilder.ToString(), Color.light_blue);
+                                }
 
                             }
                             break;
@@ -473,6 +497,10 @@ namespace BM_RCON.mods.betmode
 
             foreach (VoteState voteState in voteStates)
             {
+                if (voteState == VoteState.OFFLINE)
+                {
+                    continue;
+                }
                 stringBuilder.Append($"{voteState}: {votes[(int)voteState]}, ");
             }
 
@@ -602,6 +630,28 @@ namespace BM_RCON.mods.betmode
                 }
             }
             return (isVoteCommand, is_bet_flag_unlocked);
+        }
+
+        private bool isVoteStateCommand(Bet nextBet, string playerName, string msg, lib.BM_RCON rcon)
+        {
+            string strVoteStateCmd = "!votestate";
+
+            int indexVoteStateMsg = msg.IndexOf(strVoteStateCmd);
+            bool isVoteStateCommand = indexVoteStateMsg != -1;
+            bool nextBetExists = nextBet != null;
+
+            if (isVoteStateCommand)
+            {
+                if (!nextBetExists)
+                {
+                    sendPrivateMsg(rcon, playerName, "No bet exists. Make one with !bet <positive number>", Color.orange);
+                }
+                else
+                {
+                    displayBetVotingState(rcon, playerName, nextBet);
+                }
+            }
+            return isVoteStateCommand;
         }
     }
 }
