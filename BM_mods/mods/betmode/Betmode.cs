@@ -334,6 +334,11 @@ namespace BM_RCON.mods.betmode
                                     break;
                                 }
                                 // !votestate command
+                                bool is_votestate_command = isVoteStateCommand(bets[next_bet], playerName, msg, rcon);
+                                if (is_votestate_command)
+                                {
+                                    break;
+                                }
                                 // !help command
 
                             }
@@ -477,6 +482,10 @@ namespace BM_RCON.mods.betmode
 
             foreach (VoteState voteState in voteStates)
             {
+                if (voteState == VoteState.OFFLINE)
+                {
+                    continue;
+                }
                 stringBuilder.Append($"{voteState}: {votes[(int)voteState]}, ");
             }
 
@@ -606,6 +615,28 @@ namespace BM_RCON.mods.betmode
                 }
             }
             return (isVoteCommand, is_bet_flag_unlocked);
+        }
+
+        private bool isVoteStateCommand(Bet nextBet, string playerName, string msg, lib.BM_RCON rcon)
+        {
+            string strVoteStateCmd = "!votestate";
+
+            int indexVoteStateMsg = msg.IndexOf(strVoteStateCmd);
+            bool isVoteStateCommand = indexVoteStateMsg != -1;
+            bool nextBetExists = nextBet != null;
+
+            if (isVoteStateCommand)
+            {
+                if (!nextBetExists)
+                {
+                    sendPrivateMsg(rcon, playerName, "No bet exists. Make one with !bet <positive number>", Color.orange);
+                }
+                else
+                {
+                    displayBetVotingState(rcon, playerName, nextBet);
+                }
+            }
+            return isVoteStateCommand;
         }
     }
 }
