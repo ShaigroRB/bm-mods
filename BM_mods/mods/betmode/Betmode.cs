@@ -340,6 +340,21 @@ namespace BM_RCON.mods.betmode
                                     break;
                                 }
                                 // !help command
+                                string strHelpCommand = "!help";
+
+                                int indexHelpMsg = msg.IndexOf(strHelpCommand);
+                                if (indexHelpMsg != -1)
+                                {
+                                    StringBuilder stringBuilder = new StringBuilder();
+                                    /*
+                                     * you bet the minimum *number of people who will survive through the next wave without dying
+             * -the next wave will spawn the same amount of bosses than the* number bet
+            * - if the bet is won, every player will earn a* number of random vices
+            * */
+                                    stringBuilder.Append("Betmode is a mod where you bet on the minimum amount of people who have to survive through the next wave without dying to gain rewards. ");
+                                    stringBuilder.Append("!bet <number> to start a bet. !vote <yes/no/dunno> to vote for a bet. !votestate to know the voting state of a bet. !help to display this help");
+                                    sendPrivateMsg(rcon, playerName, stringBuilder.ToString(), Color.light_blue);
+                                }
 
                             }
                             break;
