@@ -182,8 +182,12 @@ namespace BM_RCON.mods.betmode
 
                                 if (bets[current_bet] != null)
                                 {
-                                    // TODO: update vote of player
                                     bets[current_bet].UpdateDeadPlayer(player);
+                                }
+                                if (bets[next_bet] != null)
+                                {
+                                    player.Vote = VoteState.OFFLINE;
+                                    bets[next_bet].SetPlayerVote(player);
                                 }
 
                                 disconnected_players[null_index] = connected_players[index];
