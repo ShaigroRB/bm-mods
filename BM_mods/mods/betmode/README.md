@@ -44,9 +44,9 @@
 	- [ ] Check is_bet_flag_unlocked
     - [ ] If true, for each enemies in Bet:
     	- [ ] Send request to spawn the enemy
-- [ ] chat_message:
+- [x] chat_message:
 	- [x] Check if next Bet exists
-	- [ ] Check what is written
+	- [x] Check what is written
 		- [x] If !bet < number >
 			- [x] If next Bet does not exists
 				- [x] Check if bet is valid
@@ -63,5 +63,5 @@
 					- [x] Set Players in Bet with connected_players
 					- [x] If validated, set is_bet_flag_unlocked to true
 					- [x] If not validated, set is_bet_flag_unlocked to false and set next Bet to null
-		- [ ] If !votestate, send bet vote state to player
-		- [ ] If !help, send help for commands
+		- [x] If !votestate, send bet vote state to player
+		- [x] If !help, send help for commands
