@@ -308,8 +308,7 @@ namespace BM_RCON.mods.betmode
 
                         case lib.EventType.chat_message:
                             {
-                                logger.Log("[FIXME] !votestate & !help");
-
+                                logger.LogDebug("chat_message");
                                 // chat message sent by the server
                                 if (json_obj.PlayerID == -1)
                                 {
@@ -317,6 +316,7 @@ namespace BM_RCON.mods.betmode
                                 }
 
                                 string msg = json_obj.Message;
+                                logger.LogDebug(msg);
                                 string playerName = json_obj.Name;
 
                                 // FIXME: check for !bet written at the start of the sentence
@@ -346,11 +346,6 @@ namespace BM_RCON.mods.betmode
                                 if (indexHelpMsg != -1)
                                 {
                                     StringBuilder stringBuilder = new StringBuilder();
-                                    /*
-                                     * you bet the minimum *number of people who will survive through the next wave without dying
-             * -the next wave will spawn the same amount of bosses than the* number bet
-            * - if the bet is won, every player will earn a* number of random vices
-            * */
                                     stringBuilder.Append("Betmode is a mod where you bet on the minimum amount of people who have to survive through the next wave without dying to gain rewards. ");
                                     stringBuilder.Append("!bet <number> to start a bet. !vote <yes/no/dunno> to vote for a bet. !votestate to know the voting state of a bet. !help to display this help");
                                     sendPrivateMsg(rcon, playerName, stringBuilder.ToString(), Color.light_blue);
@@ -525,9 +520,8 @@ namespace BM_RCON.mods.betmode
                     if (nextBetExists)
                     {
                         sendPrivateMsg(rcon, playerName,
-                            "A bet already exists. Bet's voting state will be sent to you.",
+                            "A bet already exists. !vote <yes/no/dunno> to vote. !votestate to see status of vote.",
                             Color.orange);
-                        displayBetVotingState(rcon, playerName, bets[nextBetIndex]);
                         return isBetCommand;
                     }
                     int betNumber = Int32.Parse(potentialBetNumber);
@@ -551,7 +545,6 @@ namespace BM_RCON.mods.betmode
                 else
                 {
                     sendPrivateMsg(rcon, playerName, "!bet command is used like this: !bet <positive number>", Color.orange);
-                    return isBetCommand;
                 }
             }
             return isBetCommand;
