@@ -1,0 +1,102 @@
+aimode "AImodeID"
+addtime "Seconds"
+addbot "TeamID" "Difficulty"
+allvice "PlayerName" "Amount"
+ban "PlayerName" "Reason"
+cleartempbans
+cure "PlayerName"
+changeteam "PlayerName" "TeamID"
+changemap "MapFolder"
+confetti "PlayerName"
+clearchat
+clear_rcon
+currentwave
+cmdlist "FileName"
+comictext "Text" "X" "Y" "Color1" "Color2" "Size"
+drunk "PlayerName"
+deletesave "ProfileID"
+displayinfo
+decalclear
+detonatebomb
+endmatch
+eventtext "Message" "Color"
+echo "Message" "Color"
+explode "X" "Y"
+explodebig "X" "Y"
+enablemutators
+enablecheats
+forceweap "PlayerName" "Weap1" "Weap2" "Weap3" "Dual"
+flash "PlayerName"
+freeze "PlayerName"
+globalsound "SoundName"
+grappleplayers "0/1"
+givevice "PlayerName" "ViceID"
+help "Command"
+kickbots
+kick "PlayerName" "Reason"
+kill "PlayerName" "DeathType"
+killenemies "DeathType"
+killall "DeathType"
+killteam "TeamID" "DeathType"
+listdir
+localsound "SoundName" "X" "Y" "Silenced"
+listsfx
+listmutators
+lobby
+move "PlayerName" "X" "Y"
+money "PlayerName" "MoneyAmount"
+matchtime
+memoryuse
+mutatorsetting "MutatorID" "MutatorSetting" "TeamID"
+networkinfo
+objreport
+pm "PlayerName" "Message" "Color"
+powerup "PlayerName" "PowerUp"
+pause
+poison "PlayerName"
+password "Text"
+playersound "PlayerName" "SoundName"
+rawsay "Message" "Color"
+randbkgd
+resetvicesall
+resetvicesplayer "PlayerName"
+restartmap
+restartround
+rcon "String"
+rconget "InstanceID" "CaseID" "RequestID" "PlayerID"
+revive "PlayerName"
+reviveall
+resetworld
+resetplayer "PlayerName"
+resetallplayers
+resetmutatorsplayer "PlayerName"
+reloadmutators "ExcludePlayers"
+say "Message"
+showcollision "0/1"
+showtiles "0/1"
+showpath "0/1"
+setwave "WaveNumber"
+setvice "PlayerName" "ViceID" "Amount"
+spawnenemy "EnemyID" "RankID" "X" "Y"
+setlife "PlayerName" "Amount"
+shock "PlayerName"
+showlogic "0/1"
+showplayerinfo "0/1"
+skip
+showhitbox "0/1"
+stopcmdlist
+spawnbody "X" "Y" "Color" "Hat" "DeathType"
+shootingrange "0/1"
+showdps "0/1"
+setrangetargets "InputObjectName"
+setmutatorplayer "PlayerName" "MutatorID" "MutatorSetting"
+setbotaimode "BotName" "AImodeID"
+spawnvice "ViceID" "X" "Y" "PlayerName"
+showhud "0/1"
+test "Test1" "Test2"
+tempban "PlayerName" "Reason" "Minutes"
+thaw "PlayerName"
+unbanlast
+unpause
+uptime
+zombending
