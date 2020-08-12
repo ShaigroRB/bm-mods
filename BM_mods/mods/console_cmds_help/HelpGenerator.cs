@@ -14,10 +14,12 @@ namespace BM_RCON.mods.console_cmds_help
         private List<string> cmds;
         private List<string> cmds_help;
         private lib.BM_RCON rcon;
+        private lib.ILogger logger;
 
-        public HelpGenerator(lib.BM_RCON rcon)
+        public HelpGenerator(lib.BM_RCON rcon, lib.ILogger logger)
         {
             this.rcon = rcon;
+            this.logger = logger;
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
             this.filename = Path.Combine(Directory.GetCurrentDirectory(), @"mods\console_cmds_help\commands.txt");
             cmds = new List<string>();
@@ -37,7 +39,8 @@ namespace BM_RCON.mods.console_cmds_help
 
         public void GetHelpForCmds()
         {
-            string helpDelim = "): ";
+            logger.LogInfo("Getting help for commands.");
+
             foreach (string cmd in cmds)
             {
                 string correctCmd = getStrBeforeFirstChar(cmd, ' ');
@@ -58,13 +61,12 @@ namespace BM_RCON.mods.console_cmds_help
                         case lib.EventType.command_entered:
                             dynamic objJson = evt.JsonAsObj;
                             string returnText = objJson.ReturnText;
-                            string trimmedHelp = returnText.Substring(returnText.IndexOf(helpDelim) + helpDelim.Length);
-                            cmds_help.Add(trimmedHelp);
+                            cmds_help.Add(returnText);
                             notCommandEntered = false;
                             break;
                         case lib.EventType.rcon_ping:
                             sendRequest(rcon, RequestType.ping, "hello");
-                            Console.WriteLine("[PING]");
+                           logger.LogInfo("(" + DateTime.Now + "): ping");
                             break;
                         default:
                             break;
@@ -78,8 +80,27 @@ namespace BM_RCON.mods.console_cmds_help
             }
         }
 
+        private string strToMarkdownHelpStr(string str)
+        {
+            string helpDelim = "): ";
+            string trimmedHelp = str.Substring(str.IndexOf(helpDelim) + helpDelim.Length);
+
+            int indexOfCheats = trimmedHelp.IndexOf("[Requires cheats]");
+            if (indexOfCheats > 0)
+            {
+                trimmedHelp = trimmedHelp.Substring(0, indexOfCheats) + "**[Requires cheats]**";
+            }
+            return trimmedHelp;
+        }
+
         public void GenerateMarkdown(string filename)
         {
+            logger.LogInfo("Generating markdown for commands' help.");
+            for (int i = 0; i < cmds_help.Count; i++)
+            {
+                cmds_help[i] = strToMarkdownHelpStr(cmds_help[i]);
+            }
+
             using (StreamWriter outputFile = new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), filename)))
             {
                 outputFile.WriteLine("| Console commands | Help description |");
@@ -107,13 +128,11 @@ namespace BM_RCON.mods.console_cmds_help
         {
             Thread.Sleep(160);
             rcon.SendRequest(requestType, body);
-            Console.WriteLine("");
         }
 
         private static lib.RCON_Event receiveEvt(lib.BM_RCON rcon)
         {
             lib.RCON_Event evt = rcon.ReceiveEvent();
-            Console.WriteLine("");
             return evt;
         }
     }
