@@ -9,10 +9,11 @@ changeteam "PlayerName" "TeamID"
 changemap "MapFolder"
 confetti "PlayerName"
 clearchat
-clear_rcon
+clearrcon
 currentwave
 cmdlist "FileName"
 comictext "Text" "X" "Y" "Color1" "Color2" "Size"
+copylog
 drunk "PlayerName"
 deletesave "ProfileID"
 displayinfo
@@ -23,8 +24,6 @@ eventtext "Message" "Color"
 echo "Message" "Color"
 explode "X" "Y"
 explodebig "X" "Y"
-enablemutators
-enablecheats
 forceweap "PlayerName" "Weap1" "Weap2" "Weap3" "Dual"
 flash "PlayerName"
 freeze "PlayerName"
@@ -43,12 +42,25 @@ localsound "SoundName" "X" "Y" "Silenced"
 listsfx
 listmutators
 lobby
+listreckon
 move "PlayerName" "X" "Y"
 money "PlayerName" "MoneyAmount"
 matchtime
 memoryuse
 mutatorsetting "MutatorID" "MutatorSetting" "TeamID"
+moveteam "TeamID" "X" "Y"
+moveenemies "X" "Y" "EnemyID"
+moveall "X" "Y"
 networkinfo
+netcodetimerange "Value"
+netcodemargin "Value"
+netcodedamageallow "Value"
+netcodedistance "Value"
+netcodereset
+netcodedeathpredicttime "Value"
+netcodedeathpredictavg "Value"
+netcodedeathpredictping "Value"
+netcodereckon "Value"
 objreport
 pm "PlayerName" "Message" "Color"
 powerup "PlayerName" "PowerUp"
@@ -93,6 +105,7 @@ setmutatorplayer "PlayerName" "MutatorID" "MutatorSetting"
 setbotaimode "BotName" "AImodeID"
 spawnvice "ViceID" "X" "Y" "PlayerName"
 showhud "0/1"
+setbotaidivert "0-100"
 test "Test1" "Test2"
 tempban "PlayerName" "Reason" "Minutes"
 thaw "PlayerName"
