@@ -66,7 +66,7 @@ namespace BM_RCON.mods.console_cmds_help
                             break;
                         case lib.EventType.rcon_ping:
                             sendRequest(rcon, RequestType.ping, "hello");
-                           logger.LogInfo("(" + DateTime.Now + "): ping");
+                            logger.LogInfo("(" + DateTime.Now + "): ping");
                             break;
                         default:
                             break;
@@ -80,16 +80,10 @@ namespace BM_RCON.mods.console_cmds_help
             }
         }
 
-        private string strToMarkdownHelpStr(string str)
+        private string trimHelpFromString(string str)
         {
             string helpDelim = "): ";
             string trimmedHelp = str.Substring(str.IndexOf(helpDelim) + helpDelim.Length);
-
-            int indexOfCheats = trimmedHelp.IndexOf("[Requires cheats]");
-            if (indexOfCheats > 0)
-            {
-                trimmedHelp = trimmedHelp.Substring(0, indexOfCheats) + "**[Requires cheats]**";
-            }
             return trimmedHelp;
         }
 
@@ -98,7 +92,7 @@ namespace BM_RCON.mods.console_cmds_help
             logger.LogInfo("Generating markdown for commands' help.");
             for (int i = 0; i < cmds_help.Count; i++)
             {
-                cmds_help[i] = strToMarkdownHelpStr(cmds_help[i]);
+                cmds_help[i] = trimHelpFromString(cmds_help[i]);
             }
 
             using (StreamWriter outputFile = new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), filename)))
@@ -109,6 +103,29 @@ namespace BM_RCON.mods.console_cmds_help
                 {
                     outputFile.WriteLine("| " + cmds[i] + " | " + cmds_help[i] + " |");
                 }
+            }
+        }
+
+        public void GenerateMediaWiki(string filename)
+        {
+            logger.LogInfo("Generating mediawiki for commands' help.");
+            for (int i = 0; i < cmds_help.Count; i++)
+            {
+                cmds_help[i] = trimHelpFromString(cmds_help[i]);
+            }
+
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), filename)))
+            {
+                outputFile.WriteLine("{|");
+                outputFile.WriteLine("!width=\"50%\"| Server command");
+                outputFile.WriteLine("!width=\"50%\"| Description");
+                for (int i = 0; i < cmds.Count; i++)
+                {
+                    outputFile.WriteLine("|-");
+                    outputFile.WriteLine("| " + cmds[i]);
+                    outputFile.WriteLine("| " + cmds_help[i]);
+                }
+                outputFile.WriteLine("|}");
             }
         }
 
