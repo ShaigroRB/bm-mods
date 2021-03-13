@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ViceID = BM_RCON.BM_RCON_lib.ViceID;
+using lib = BM_RCON.BM_RCON_lib;
 
 namespace BM_RCON.mods.betmode
 {
@@ -89,12 +89,12 @@ namespace BM_RCON.mods.betmode
             }
         }
 
-        public void ViceUsed(ViceID vice)
+        public void ViceUsed(lib.Vice vice)
         {
             this.vices[(short)vice] -= 1;
         }
 
-        public void VicesAdded(ViceID vice, int amount)
+        public void VicesAdded(lib.Vice vice, int amount)
         {
             this.vices[(short)vice] += amount;
         }

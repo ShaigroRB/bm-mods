@@ -22,7 +22,7 @@ namespace BM_RCON.mods.betmode
         public Bet(int bet)
         {
             // not a constant because we don't know yet no other enemies will be added
-            int total_nb_enemies = Enum.GetNames(typeof(lib.EnemyID)).Length;
+            int total_nb_enemies = Enum.GetNames(typeof(lib.Enemy)).Length;
             // there is 40 vices and it won't change
             int total_nb_vices = 40;
 
@@ -38,8 +38,8 @@ namespace BM_RCON.mods.betmode
 
         private void randomizeBosses()
         {
-            int first_boss = (int)lib.EnemyID.indigo;
-            int last_boss = (int)lib.EnemyID.roxxy;
+            int first_boss = (int)lib.Enemy.indigo;
+            int last_boss = (int)lib.Enemy.roxxy;
 
             Random rnd = new Random();
             int boss = 0;
@@ -53,8 +53,8 @@ namespace BM_RCON.mods.betmode
 
         private void randomizeVices()
         {
-            int first_vice = (int)lib.ViceID.lager;
-            int last_vice = (int)lib.ViceID.water;
+            int first_vice = (int)lib.Vice.lager;
+            int last_vice = (int)lib.Vice.water;
 
             Random rnd = new Random();
             int vice = 0;

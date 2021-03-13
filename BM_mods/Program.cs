@@ -17,14 +17,14 @@ namespace BM_RCON.mods
         const string addr = "127.0.0.1";
         const string passwd = "admin";
 
-        private static void sendRequest(lib.BM_RCON rcon, RequestType requestType, string body)
+        private static void sendRequest(lib.RCON_Client rcon, RequestType requestType, string body)
         {
             Thread.Sleep(160);
             rcon.SendRequest(requestType, body);
             Console.WriteLine("");
         }
 
-        private static lib.RCON_Event receiveEvt(lib.BM_RCON rcon)
+        private static lib.RCON_Event receiveEvt(lib.RCON_Client rcon)
         {
             lib.RCON_Event evt = rcon.ReceiveEvent();
             Console.WriteLine("");
@@ -33,6 +33,8 @@ namespace BM_RCON.mods
 
         static int Main(string[] args)
         {
+            lib.ILogger logger = new lib.ConsoleLogger();
+            logger.StopWriting();
             try
             {
                 /*
@@ -45,7 +47,7 @@ namespace BM_RCON.mods
                 string body = passwd;
                 string bigtext_cmd = "!bigtext";
                 // init rcon object with address, port and password
-                lib.BM_RCON rcon_obj = new lib.BM_RCON(addr, port, body);
+                lib.RCON_Client rcon_obj = new lib.RCON_Client(addr, port, body, logger);
                 // connect the rcon client to addr:port with body
                 rcon_obj.Connect();
                 Console.WriteLine("");
@@ -104,6 +106,8 @@ namespace BM_RCON.mods
                 Console.WriteLine(e.ToString());
                 Console.WriteLine("Something went wrong in the main.");
             }
+
+            logger.StopWriting();
 
             // press 'Enter' to exit the console
             Console.Read();
